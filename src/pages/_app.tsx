@@ -1,23 +1,25 @@
-import '@/styles/globals.css';
-import type { AppProps } from 'next/app';
-import { ChakraProvider } from '@chakra-ui/react';
+import "@/styles/globals.css";
+import type { AppProps } from "next/app";
 import { MeshProvider } from "@meshsdk/react";
+import { Toaster } from "@/components/ui/sonner";
+import LocalFont from "next/font/local";
+import ThemeProvider from "@/components/layout/provider";
+
+const calSans = LocalFont({
+  src: "../assets/fonts/CalSans-SemiBold.ttf",
+  variable: "--font-calsans",
+  weight: "600",
+});
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <ChakraProvider
-      toastOptions={{
-        defaultOptions: {
-          position: "top-right",
-          variant: "left-accent",
-          isClosable: true,
-          duration: 10_000
-        }
-      }}
-    >
+    <div className={calSans.className}>
       <MeshProvider>
-        <Component {...pageProps} />
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Component {...pageProps} />
+        </ThemeProvider>
       </MeshProvider>
-    </ChakraProvider>
-  )
+      <Toaster />
+    </div>
+  );
 }
