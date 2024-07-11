@@ -34,7 +34,7 @@ export default function Header() {
         <div className="hidden md:block min-w-[115px]">
           <p className="text-sm text-muted-foreground/60">Total Staked</p>
           <div className="text-sm text-foreground flex items-center gap-2">
-            <span className="text-textPrimary">MTK -</span>
+            <span className="text-textPrimary">tADA -</span>
             {balance ? (
               formatNumber(balance.toString())
             ) : (

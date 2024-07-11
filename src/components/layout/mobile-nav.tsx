@@ -43,7 +43,7 @@ const MobileNav = () => {
                 <p className="text-sm text-muted-foreground">Total Staked</p>
 
                 <div className="text-sm text-foreground flex items-center gap-2">
-                  <span className="text-textPrimary">MTK -</span>
+                  <span className="text-textPrimary">tADA -</span>
                   {balance ? balance : <Skeleton className="h-4 w-12" />}
                 </div>
               </div>

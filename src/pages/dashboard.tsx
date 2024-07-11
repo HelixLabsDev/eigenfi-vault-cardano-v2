@@ -94,7 +94,7 @@ export default function Dashboard() {
                 <span className="text-textPrimary">
                   {(balance / 1000000).toFixed(2)}
                 </span>{" "}
-                - ADA
+                - tADA
               </p>
             ) : (
               <Skeleton className="h-6 w-32" />
