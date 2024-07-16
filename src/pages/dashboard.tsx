@@ -11,7 +11,7 @@ import { use, useEffect, useState } from "react";
 
 export default function Dashboard() {
   const { connected } = useWallet();
-  const [balance, setBalance] = useState<number>(0);
+  const [balance, setBalance] = useState<number | null>(null);
   const [points, setPoints] = useState<number>();
   const [twoMin, setTwoMin] = useState<boolean>(true);
   const [totalBalance, setTotalBalance] = useState<number | null>(null);
@@ -112,7 +112,7 @@ export default function Dashboard() {
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-muted-foreground">Total Wallet Value</p>
-            {balance > 0 ? (
+            {balance !== null && balance >= 0 ? (
               <p className="text-md">
                 <span className="text-textPrimary">{balance / 1e6}</span> - tADA
               </p>

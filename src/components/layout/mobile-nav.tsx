@@ -1,30 +1,23 @@
-"use client";
 import SideBarContent from "@/components/layout/sidebar-content";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { MenuIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Skeleton } from "../ui/skeleton";
-// import { useAccount } from "wagmi";
-// import { getMockTokenContract } from "@/contracts/MockTokenContractHelper";
-// import { format18 } from "@/contracts/helpers";
-// import genAddresses from "../../contracts/addresses.json";
+import { formatNumber } from "@/lib/utils";
+import { totalFundBalance } from "@/services/point";
 
 const MobileNav = () => {
   const [open, setOpen] = useState(false);
-  // const { address } = useAccount();
+  const [balance, setBalance] = useState<number | null>(null);
 
-  const [balance, setBalance] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const res = await totalFundBalance();
+      setBalance(res.totalBalance);
+    };
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     const { mockTokenReadContract } = await getMockTokenContract();
-  //     const amount = await mockTokenReadContract?.balanceOf(
-  //       genAddresses.eigenFiPool
-  //     );
-  //     setBalance(format18(amount));
-  //   };
-  //   fetch();
-  // }, [address]);
+    fetchBalance();
+  }, []);
 
   return (
     <>
@@ -44,7 +37,11 @@ const MobileNav = () => {
 
                 <div className="text-sm text-foreground flex items-center gap-2">
                   <span className="text-textPrimary">tADA -</span>
-                  {balance ? balance : <Skeleton className="h-4 w-12" />}
+                  {balance !== null ? (
+                    formatNumber(balance.toString())
+                  ) : (
+                    <Skeleton className="h-4 w-12" />
+                  )}
                 </div>
               </div>
               <div className="">
