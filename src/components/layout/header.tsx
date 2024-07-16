@@ -4,15 +4,15 @@ import { ModeToggle } from "../common/theme-toggle";
 import Link from "next/link";
 import { Skeleton } from "../ui/skeleton";
 import ConnectionHandler from "../connect-button";
-import { totalBalance } from "@/services/point";
+import { totalFundBalance } from "@/services/point";
 import { formatNumber } from "@/lib/utils";
 
 export default function Header() {
-  const [balance, setBalance] = React.useState<number>(0);
+  const [balance, setBalance] = React.useState<number | null>(null);
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const res = await totalBalance();
+      const res = await totalFundBalance();
       setBalance(res.totalBalance);
     };
 
@@ -35,7 +35,7 @@ export default function Header() {
           <p className="text-sm text-muted-foreground/60">Total Staked</p>
           <div className="text-sm text-foreground flex items-center gap-2">
             <span className="text-textPrimary">tADA -</span>
-            {balance ? (
+            {balance !== null ? (
               formatNumber(balance.toString())
             ) : (
               <Skeleton className="h-4 w-12" />

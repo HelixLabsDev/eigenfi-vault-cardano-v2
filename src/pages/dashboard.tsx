@@ -1,15 +1,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { calculatePoints, getPointsByAddress } from "@/services/point";
+import {
+  calculatePoints,
+  getPointsByAddress,
+  getTotalStakedBalance,
+} from "@/services/point";
 import { getAddress, getBalance, getBalances } from "@/services/web3";
 import { useWallet } from "@meshsdk/react";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 export default function Dashboard() {
   const { connected } = useWallet();
   const [balance, setBalance] = useState<number>(0);
   const [points, setPoints] = useState<number>();
   const [twoMin, setTwoMin] = useState<boolean>(true);
+  const [totalBalance, setTotalBalance] = useState<number | null>(null);
 
   const [address, setAddress] = useState("");
 
@@ -23,7 +28,25 @@ export default function Dashboard() {
   }, []);
 
   useEffect(() => {
+    if (!address) {
+      return;
+    }
+    const fetchTotalBalance = async () => {
+      const amount = await getTotalStakedBalance({
+        address: address.toString(),
+      });
+      amount?.points?.length
+        ? setTotalBalance(amount.points[0].amount)
+        : setTotalBalance(0);
+    };
+    fetchTotalBalance();
+  }, [address]);
+
+  useEffect(() => {
     const fetchPoints = async () => {
+      if (!address) {
+        return;
+      }
       const pointData = await getPointsByAddress({
         address: address?.toString() ?? "",
       });
@@ -91,10 +114,17 @@ export default function Dashboard() {
             <p className="text-sm text-muted-foreground">Total Wallet Value</p>
             {balance > 0 ? (
               <p className="text-md">
-                <span className="text-textPrimary">
-                  {(balance / 1000000).toFixed(2)}
-                </span>{" "}
-                - tADA
+                <span className="text-textPrimary">{balance / 1e6}</span> - tADA
+              </p>
+            ) : (
+              <Skeleton className="h-6 w-32" />
+            )}
+          </div>
+          <div className="flex flex-col gap-1">
+            <p className="text-sm text-muted-foreground">Total Staked</p>
+            {totalBalance !== null && totalBalance >= 0 ? (
+              <p className="text-md">
+                {formatNumber(totalBalance.toFixed(2))} - tADA
               </p>
             ) : (
               <Skeleton className="h-6 w-32" />

@@ -17,12 +17,13 @@ import { Loader2 } from "lucide-react";
 import {
   calculatePoints,
   createPoint,
-  getPointsByAddress,
+  getTotalStakedBalance,
   withdrawPoint,
 } from "@/services/point";
 import { lockTx } from "@/offchain/lockTx";
 import { useNetwork, useWallet } from "@meshsdk/react";
 import { unlockTx } from "@/offchain/unlockTx";
+import { getBalance } from "@/services/web3";
 
 const data = {
   protocol: "tADA",
@@ -42,66 +43,61 @@ export function TableDemo({
   const [balance, setBalance] = useState<string | null>(null);
   const [amount, setAmount] = useState<number | null>(null);
   const [showDrawer, setShowDrawer] = useState<boolean>(false);
-  const [isPending, startTransition] = useTransition();
+  // const [isPending, startTransition] = useTransition();
+  const [isPending, startTransition] = useState(false);
   const [message, setMessage] = useState<{
     desc: string;
     type: string;
     title?: string;
   } | null>(null);
-  const { wallet, connected } = useWallet();
+  const { wallet } = useWallet();
   const network = useNetwork();
 
-  // const reFetchBalance = async () => {
-  //   if (withdraw) {
-  //     // EigenFiPool Staked Balance
-  //     const { eigenFiPoolReadContract } = await getEigenFiPoolContract();
-  //     const amount = await eigenFiPoolReadContract.balance(
-  //       genAddresses.mockToken,
-  //       address
-  //     );
-  //     setBalance(format18(amount));
-  //     return amount;
-  //   } else {
-  //     // MockToken Balance
-  //     const { mockTokenReadContract } = await getMockTokenContract();
-  //     const amount = await mockTokenReadContract?.balanceOf(address);
-  //     setBalance(format18(amount));
-  //     return amount;
-  //   }
-  // };
+  const [totalBalance, setTotalBalance] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchBalance = async () => {
+      const balance = await getBalance();
+      setTotalBalance(balance[0].quantity);
+    };
+    fetchBalance();
+  }, [address]);
+
+  const reFetchBalance = async () => {
+    if (withdraw) {
+      const amount = await getTotalStakedBalance({
+        address: address.toString(),
+      });
+      amount?.points?.length
+        ? setBalance(amount.points[0].amount)
+        : setBalance("0");
+    } else {
+      // MockToken Balance
+      const balance = await getBalance();
+      setBalance((balance[0]?.quantity / 1e6).toString());
+    }
+  };
 
   useEffect(() => {
     const fetch = async () => {
       if (withdraw) {
         // EigenFiPool Staked Balance
-        const { points, error, status } = await getPointsByAddress({
+        const amount = await getTotalStakedBalance({
           address: address.toString(),
         });
-        points && points.length > 0
-          ? setBalance(points[0].amount)
+        amount?.points?.length
+          ? setBalance(amount.points[0].amount)
           : setBalance("0");
-        return amount;
       } else {
-        // MockToken Balance
-        const { points, error, status } = await getPointsByAddress({
-          address: address.toString(),
-        });
-        points && points.length > 0
-          ? setBalance(points[0].amount)
-          : setBalance("0");
-        return amount;
+        setBalance((totalBalance / 1e6).toString());
       }
     };
     fetch();
-  }, [address, amount, withdraw]);
+  }, [address, amount, totalBalance, withdraw]);
 
   async function depositERC20() {
     if (amount === null) {
       return toast.error("Please enter an amount");
-    }
-
-    if (amount === 1) {
-      return toast.error("Minimum amount is 2");
     }
 
     if (network === 1) {
@@ -109,20 +105,22 @@ export function TableDemo({
     }
 
     try {
-      await lockTx(wallet, "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35", amount);
-      // lock transaction created successfully
+      startTransition(true);
+      const txHash = await lockTx(
+        wallet,
+        "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35",
+        amount
+      );
 
-      // if (!txHash) {
-      //   return toast.error("Something went wrong");
-      // }
       const res = await createPoint({
         address: address.toString(),
         amount: Number(amount || 0),
+        total_balance: Number(totalBalance || 0),
       });
 
       if ([200, 201, 204].includes(res.status)) {
         toast.success(
-          `Deposit successful. Thank you for depositing ${amount} ${data.protocol}.`
+          `tx submitted: https://preprod.cardanoscan.io/transaction/${txHash}`
         );
 
         setMessage({
@@ -134,22 +132,18 @@ export function TableDemo({
         // Close the drawer after 3 seconds
         setTimeout(() => {
           setShowDrawer(false);
-        }, 3000);
+        }, 4000);
 
         // Re-fetch balance
-        // reFetchBalance();
-
-        // toast.success(
-        //   `lock tx submitted: https://preprod.cardanoscan.io/transaction/${txHash}`
-        // );
-        // console.log("txHash ->", txHash);
+        reFetchBalance();
+        startTransition(false);
       }
     } catch (err: any) {
       handleError(err);
+      startTransition(false);
     }
   }
 
-  // Helper function to handle errors
   const handleError = (err: any) => {
     const errorMessage =
       err.reason || err.data?.message || err.message || "An error occurred";
@@ -161,10 +155,12 @@ export function TableDemo({
   };
 
   const withdrawERC20 = async () => {
-    if (amount === null) {
-      return toast.error("Please enter an amount");
-    }
+    // if (amount === null) {
+    //   return toast.error("Please enter an amount");
+    // }
+
     try {
+      startTransition(true);
       await unlockTx(wallet, "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35");
 
       await withdrawPoint({
@@ -180,9 +176,10 @@ export function TableDemo({
 
           setTimeout(() => {
             setShowDrawer(false);
-          }, 2000);
+          }, 4000);
 
-          // reFetchBalance();
+          reFetchBalance();
+          startTransition(false);
         } else {
           toast.error(
             `Withdraw failed. Please try again. If the problem persists, please contact us.`
@@ -192,8 +189,10 @@ export function TableDemo({
     } catch (err) {
       console.log("err ->", err);
       toast.error("Something went wrong");
+      startTransition(false);
     }
   };
+
   const max = async () => {
     setAmount(Number(balance));
   };
@@ -211,9 +210,9 @@ export function TableDemo({
         </p>
         <div className="mt-4">
           <Button
-            disabled={!address || !amount || isPending}
+            disabled={!address || (!withdraw && !amount) || isPending}
             onClick={() => {
-              setShowDrawer(true);
+              !withdraw ? setShowDrawer(true) : withdrawERC20();
             }}
             className="w-full"
           >
@@ -246,22 +245,28 @@ export function TableDemo({
         />
         <TableRow>
           <TableCell className="font-medium">{data.protocol}</TableCell>
-          <TableCell className="flex gap-4 items-center">
-            <Input
-              placeholder=""
-              type="number"
-              className="w-[250px]"
-              value={amount?.toString() || ""}
-              onChange={(e) => {
-                e.target.value === ""
-                  ? setAmount(null)
-                  : setAmount(Number(e.target.value));
-              }}
-            />
-            <Button size={"xsm"} onClick={() => max()}>
-              Max
-            </Button>
-          </TableCell>
+          {withdraw ? (
+            <TableCell className="flex gap-4 items-center">
+              Last deposit
+            </TableCell>
+          ) : (
+            <TableCell className="flex gap-4 items-center">
+              <Input
+                placeholder=""
+                type="number"
+                className="w-[250px]"
+                value={amount?.toString() || ""}
+                onChange={(e) => {
+                  e.target.value === ""
+                    ? setAmount(null)
+                    : setAmount(Number(e.target.value));
+                }}
+              />
+              <Button size={"xsm"} onClick={() => max()}>
+                Max
+              </Button>
+            </TableCell>
+          )}
           {balance !== null ? (
             <TableCell>{balance}</TableCell>
           ) : (

@@ -1,4 +1,3 @@
-"use client";
 import { useWallet } from "@meshsdk/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,7 +6,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronRight, LogOut } from "lucide-react";
 import { getAddress, getInstalled } from "@/services/web3";
@@ -15,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export default function ConnectionHandler() {
   const [isOpen, setIsOpen] = useState(false);
-  const { connected, connect, disconnect } = useWallet();
+  const { connect, disconnect, connected } = useWallet();
   const [address, setAddress] = useState("");
   const [installedWallet, setInstalledWallet] = useState<any>([]);
 
@@ -30,7 +29,13 @@ export default function ConnectionHandler() {
     fetchAddress();
   }, []);
 
-  console.log(installedWallet, "installedWallet");
+  useEffect(() => {
+    const walletprovider = localStorage.getItem("walletprovider");
+    if (walletprovider) connect(walletprovider);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const installedWalletMemo = useMemo(() => installedWallet, [installedWallet]);
 
   return (
     <>
@@ -81,7 +86,10 @@ export default function ConnectionHandler() {
               <div className="flex flex-col gap-6 w-full">
                 <div
                   className="flex items-center gap-2 hover:bg-foreground/5 rounded-sm py-2 w-full justify-between cursor-pointer"
-                  onClick={() => connect("nami")}
+                  onClick={() => {
+                    connect("nami");
+                    localStorage.setItem("walletprovider", "nami");
+                  }}
                 >
                   <div className="flex items-center gap-3">
                     <Image
@@ -96,7 +104,7 @@ export default function ConnectionHandler() {
                   <ChevronRight className="w-4 h-4" />
                 </div>
 
-                {installedWallet.length === 0 && (
+                {installedWalletMemo.length === 0 && (
                   <div className="flex gap-1">
                     if not installed
                     <a

@@ -7,21 +7,17 @@ import { useWallet } from "@meshsdk/react";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const { connected, connect, disconnect } = useWallet();
+  const { connected } = useWallet();
   const [address, setAddress] = useState("");
 
   useEffect(() => {
     const fetchAddress = async () => {
       const address = await getAddress();
-      // const iw = await getInstalled();
-      // setInstalledWallet(iw);
       setAddress(address);
     };
 
     fetchAddress();
   }, []);
-
-  //   const myAddrs = (await wallet.getUsedAddresses()).map(Address.fromString);
 
   return (
     <div>
@@ -34,25 +30,25 @@ export default function Home() {
         </TabsList>
         <TabsContent value="stake">
           <div className="py-6">
-            <div className="py-6">
-              {connected ? (
-                <TableDemo withdraw={null} address={address || ""} />
-              ) : (
-                <p className="text-sm text-muted-foreground px-2">
-                  Connect your wallet{" "}
-                </p>
-              )}
-            </div>
+            {connected ? (
+              <TableDemo withdraw={null} address={address || ""} />
+            ) : (
+              <p className="text-sm text-muted-foreground px-2">
+                Connect your wallet{" "}
+              </p>
+            )}
           </div>
         </TabsContent>
         <TabsContent value="withdraw">
-          {connected ? (
-            <TableDemo withdraw={true} address={address || ""} />
-          ) : (
-            <p className="text-sm text-muted-foreground px-2">
-              Connect your wallet{" "}
-            </p>
-          )}
+          <div className="py-6">
+            {connected ? (
+              <TableDemo withdraw={true} address={address || ""} />
+            ) : (
+              <p className="text-sm text-muted-foreground px-2">
+                Connect your wallet{" "}
+              </p>
+            )}
+          </div>
         </TabsContent>
       </Tabs>
     </div>

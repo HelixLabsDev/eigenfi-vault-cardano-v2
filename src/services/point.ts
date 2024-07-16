@@ -7,7 +7,7 @@ async function getPoints() {
     data: points,
     error,
     status,
-  } = await supabase.from("users").select("*");
+  } = await supabase.from("users_cardano").select("*");
 
   return { points, error, status };
 }
@@ -15,15 +15,17 @@ async function getPoints() {
 async function createPoint({
   address,
   amount,
+  total_balance,
 }: {
   address: string;
   amount: number;
+  total_balance: number;
 }) {
   const {
     data: findData,
     error: findError,
     status: findStatus,
-  } = await supabase.from("users").select("*").eq("address", address);
+  } = await supabase.from("users_cardano").select("*").eq("address", address);
 
   if (findError) {
     return { error: findError, status: findStatus, points: null };
@@ -35,7 +37,7 @@ async function createPoint({
       error: updateError,
       status: updateStatus,
     } = await supabase
-      .from("users")
+      .from("users_cardano")
       .update({
         amount: findData[0].amount + amount,
       })
@@ -47,11 +49,12 @@ async function createPoint({
       data: points,
       status,
       error,
-    } = await supabase.from("users").insert({
+    } = await supabase.from("users_cardano").insert({
       amount: amount,
       point: 0,
       address: address,
       created_at: Date.now(),
+      total_balance: total_balance,
     });
 
     return { points, error, status };
@@ -69,7 +72,7 @@ async function withdrawPoint({
     data: findData,
     error: findError,
     status: findStatus,
-  } = await supabase.from("users").select("*").eq("address", address);
+  } = await supabase.from("users_cardano").select("*").eq("address", address);
 
   if (findError) {
     return { error: findError, status: findStatus, points: null };
@@ -80,7 +83,7 @@ async function withdrawPoint({
     error: updateError,
     status: updateStatus,
   } = await supabase
-    .from("users")
+    .from("users_cardano")
     .update({
       amount: findData[0].amount - amount,
     })
@@ -94,7 +97,7 @@ async function calculatePoints({ address }: { address: string }) {
     data: points,
     error,
     status,
-  } = await supabase.from("users").select("*").eq("address", address);
+  } = await supabase.from("users_cardano").select("*").eq("address", address);
 
   if (error || points.length === 0) {
     return { error, status, points };
@@ -114,7 +117,7 @@ async function calculatePoints({ address }: { address: string }) {
     error: updateError,
     status: updateStatus,
   } = await supabase
-    .from("users")
+    .from("users_cardano")
     .update({
       point: totalPoints,
       created_at: updateDate,
@@ -129,18 +132,21 @@ async function getPointsByAddress({ address }: { address: string }) {
     data: points,
     error,
     status,
-  } = await supabase.from("users").select("*").eq("address", address);
+  } = await supabase.from("users_cardano").select("*").eq("address", address);
 
   return { points, error, status };
 }
 
-async function totalBalance() {
+async function totalFundBalance() {
   const {
     data: points,
     error,
     status,
-  } = await supabase.from("users").select("amount");
+  } = await supabase.from("users_cardano").select("amount");
 
+  if (points?.length === 0) {
+    return { error, status, totalBalance: 0 };
+  }
   const totalBalance =
     points?.reduce((acc, point) => {
       return acc + (point.amount || 0); // Ensure point.amount is a number
@@ -149,11 +155,25 @@ async function totalBalance() {
   return { totalBalance, error, status };
 }
 
+async function getTotalStakedBalance({ address }: { address: string }) {
+  const {
+    data: points,
+    error,
+    status,
+  } = await supabase
+    .from("users_cardano")
+    .select("amount")
+    .eq("address", address);
+
+  return { points, error, status };
+}
+
 export {
   getPoints,
   createPoint,
   getPointsByAddress,
   calculatePoints,
   withdrawPoint,
-  totalBalance,
+  totalFundBalance,
+  getTotalStakedBalance,
 };

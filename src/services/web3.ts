@@ -19,6 +19,7 @@ export const getAddress = async () => {
   }
   const wallett = await BrowserWallet?.enable("nami");
   const changeAddress = await wallett.getChangeAddress();
+
   return changeAddress;
 };
 

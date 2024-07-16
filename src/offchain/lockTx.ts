@@ -33,7 +33,7 @@ async function getLockTx(
         // output holding the founds that we'll spend later
         address: scriptTestnetAddr,
         // 10M lovelaces === 10 ADA
-        value: Value.lovelaces(amount * 1000000),
+        value: Value.lovelaces(amount * 1e6),
         // remeber to include a datum
         datum: new DataB(
           // remember we set the datum to be the public key hash?
