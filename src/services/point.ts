@@ -31,7 +31,11 @@ async function createPoint({
     return { error: findError, status: findStatus, points: null };
   }
 
+  let history = findData[0]?.history && JSON.parse(findData[0]?.history);
+
   if (findData?.length > 0) {
+    history.push(amount);
+
     const {
       data: updatePoints,
       error: updateError,
@@ -40,6 +44,7 @@ async function createPoint({
       .from("users_cardano")
       .update({
         amount: findData[0].amount + amount,
+        history: JSON.stringify(history),
       })
       .eq("address", address);
 
@@ -55,6 +60,7 @@ async function createPoint({
       address: address,
       created_at: Date.now(),
       total_balance: total_balance,
+      history: JSON.stringify([amount]),
     });
 
     return { points, error, status };
@@ -63,10 +69,10 @@ async function createPoint({
 
 async function withdrawPoint({
   address,
-  amount,
+  // amount,
 }: {
   address: string;
-  amount: number;
+  // amount: number;
 }) {
   const {
     data: findData,
@@ -78,6 +84,9 @@ async function withdrawPoint({
     return { error: findError, status: findStatus, points: null };
   }
 
+  let history = JSON.parse(findData[0]?.history) || [];
+  history.shift();
+
   const {
     data: updatePoints,
     error: updateError,
@@ -85,7 +94,8 @@ async function withdrawPoint({
   } = await supabase
     .from("users_cardano")
     .update({
-      amount: findData[0].amount - amount,
+      amount: findData[0].amount - Number(JSON.parse(findData[0].history)[0]),
+      history: JSON.stringify(history),
     })
     .eq("address", address);
 

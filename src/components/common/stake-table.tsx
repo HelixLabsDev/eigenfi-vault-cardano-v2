@@ -165,7 +165,7 @@ export function TableDemo({
 
       await withdrawPoint({
         address: address.toString(),
-        amount: Number(amount),
+        // amount: Number(amount),
       }).then((res) => {
         if (res.status === 201 || res.status === 200 || res.status === 204) {
           toast.success("Withdraw successful");
@@ -247,7 +247,7 @@ export function TableDemo({
           <TableCell className="font-medium">{data.protocol}</TableCell>
           {withdraw ? (
             <TableCell className="flex gap-4 items-center">
-              Last deposit
+              First deposit
             </TableCell>
           ) : (
             <TableCell className="flex gap-4 items-center">
