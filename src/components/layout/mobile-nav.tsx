@@ -48,9 +48,7 @@ const MobileNav = () => {
                 <p className="text-sm text-muted-foreground">
                   Stakers are earning
                 </p>
-                <p className="text-sm">
-                  Staking APR + Restaking APR + LRT points + Helix Points
-                </p>
+                <p className="text-sm">Staking APR + Helix Points</p>
               </div>
             </div>
           </div>

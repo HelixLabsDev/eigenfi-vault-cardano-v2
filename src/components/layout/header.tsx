@@ -46,9 +46,7 @@ export default function Header() {
           <p className="text-sm text-muted-foreground/60">
             Stakers are earning
           </p>
-          <p className="text-sm text-foreground">
-            Staking APR + Restaking APR + LRT points + Helix Points
-          </p>
+          <p className="text-sm text-foreground">Staking APR + Helix Points</p>
         </div>
         <div className="items-center gap-4 flex">
           <ConnectionHandler />
