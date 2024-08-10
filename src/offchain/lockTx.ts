@@ -52,7 +52,6 @@ export async function lockTx(
   projectId: string,
   amount: number
 ): Promise<string> {
-  console.log("wallet", wallet);
   const Blockfrost = new BlockfrostPluts({ projectId });
   const unsingedTx = await getLockTx(wallet, Blockfrost, amount);
 

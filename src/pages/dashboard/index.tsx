@@ -7,7 +7,7 @@ import {
 } from "@/services/point";
 import { getAddress, getBalance, getBalances } from "@/services/web3";
 import { useWallet } from "@meshsdk/react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const { connected } = useWallet();

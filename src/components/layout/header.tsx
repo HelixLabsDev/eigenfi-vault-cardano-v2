@@ -1,58 +1,46 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MobileNav from "./mobile-nav";
-import { ModeToggle } from "../common/theme-toggle";
 import Link from "next/link";
-import { Skeleton } from "../ui/skeleton";
+import SideBarContent from "./sidebar-content";
+import { getAddress } from "@/services/web3";
+
 import ConnectionHandler from "../connect-button";
-import { totalFundBalance } from "@/services/point";
-import { formatNumber } from "@/lib/utils";
 
 export default function Header() {
-  const [balance, setBalance] = React.useState<number | null>(null);
+  const [address, setAddress] = useState("");
 
   useEffect(() => {
-    const fetchBalance = async () => {
-      const res = await totalFundBalance();
-      setBalance(res.totalBalance);
+    const fetchAddress = async () => {
+      const address = await getAddress();
+      setAddress(address);
     };
 
-    fetchBalance();
+    fetchAddress();
   }, []);
 
   return (
-    <div className="grid grid-cols-6 gap-6 container py-6 items-center">
-      <div className="block md:hidden col-span-1">
-        <MobileNav />
-      </div>
-      <div className="md:block hidden relative cursor-pointer items-center justify-center font-michroma">
-        <Link href="/">
-          <span className="text-xl font-bold">EigenFi</span>
-          <span className="text-sm font-bold text-primary">cardano</span>
-        </Link>
-      </div>
-      <div className="col-span-5 flex justify-end md:justify-between gap-6 w-full items-center">
-        <div className="hidden md:block min-w-[115px]">
-          <p className="text-sm text-muted-foreground/60">Total Staked</p>
-          <div className="text-sm text-foreground flex items-center gap-2">
-            <span className="text-textPrimary">tADA -</span>
-            {balance !== null ? (
-              formatNumber(balance.toString())
-            ) : (
-              <Skeleton className="h-4 w-12" />
-            )}
-          </div>
-        </div>
-        <div className="hidden md:block">
-          <p className="text-sm text-muted-foreground/60">
-            Stakers are earning
+    <div className="justify-between w-full flex px-4 md:px-8 py-6 items-center">
+      {/* bg-gradient-to-tl from-black via-aquamarine-600/20 to-black */}
+      <div className="flex justify-between gap-16 items-center md:w-auto w-full">
+        <Link
+          href="/"
+          className="relative cursor-pointer items-center justify-center font-michroma"
+        >
+          <p className="text-xl font-bold">Eigenfi</p>
+          <p className="absolute rounded-[0.2rem] text-aquamarine-300 border border-white top-[6.5px] -right-12 text-[10px] px-[2px]">
+            Cardano
           </p>
-          <p className="text-sm text-foreground">Staking APR + Helix Points</p>
+        </Link>
+        <div className="block md:hidden">
+          <MobileNav />
         </div>
-        <div className="items-center gap-4 flex">
-          <ConnectionHandler />
+        <div className="md:flex gap-4 hidden">
+          <SideBarContent />
+        </div>
+      </div>
 
-          <ModeToggle />
-        </div>
+      <div className="md:block hidden">
+        <ConnectionHandler />
       </div>
     </div>
   );

@@ -1,10 +1,9 @@
-"use client";
-
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
-// import { Link } from "next-view-transitions";
-import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { navItem } from "@/config/dashboard";
 
 interface SideBarContentProps {
   setOpen?: Dispatch<SetStateAction<boolean>>;
@@ -12,31 +11,28 @@ interface SideBarContentProps {
 
 const SideBarContent = ({ setOpen }: SideBarContentProps) => {
   const pathname = usePathname();
-  const navigation = [
-    { name: "Stake", href: "/" },
-    { name: "Dashboard", href: "/dashboard" },
-    // { name: "Stake", href: "/stake" },
-  ];
 
-  return (
-    <ul className="flex flex-col gap-4 col-span-1 py-12">
-      {navigation.map((item) => (
-        <Link
-          key={item.href}
-          href={item.href}
-          onClick={() => {
-            setOpen && setOpen(false);
-          }}
-          className={cn(
-            "text-sm duration-500 text-zinc-500 hover:text-black dark:text-zinc-500 dark:hover:text-zinc-300",
-            pathname === item.href && "dark:text-zinc-300 text-black"
-          )}
-        >
-          {item.name}
-        </Link>
-      ))}
-    </ul>
-  );
+  return navItem.map((item) => (
+    <Link
+      key={item.href}
+      href={item.href}
+      onClick={() => {
+        setOpen && setOpen(false);
+      }}
+      className={cn(
+        "duration-100 text-zinc-500",
+        pathname === item.href && "text-zinc-300"
+      )}
+    >
+      <Button
+        variant={"ghost"}
+        className="md:text-sm text-lg flex items-center gap-1"
+      >
+        {item.icon && <div className="w-5 h-5">{item.icon}</div>}
+        {item?.name}
+      </Button>
+    </Link>
+  ));
 };
 
 export default SideBarContent;

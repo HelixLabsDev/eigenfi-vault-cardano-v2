@@ -11,8 +11,15 @@ import Image from "next/image";
 import { ChevronRight, LogOut } from "lucide-react";
 import { getAddress, getInstalled } from "@/services/web3";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { MdWallet } from "react-icons/md";
 
-export default function ConnectionHandler() {
+export default function ConnectionHandler({
+  isOpenProp,
+  setIsOpenProp,
+}: {
+  isOpenProp?: boolean;
+  setIsOpenProp?: any;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const { connect, disconnect, connected } = useWallet();
   const [address, setAddress] = useState("");
@@ -35,25 +42,42 @@ export default function ConnectionHandler() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    isOpenProp && setIsOpen(true);
+    setIsOpenProp && setIsOpenProp(false);
+  }, [isOpenProp, isOpen, setIsOpenProp]);
+
   const installedWalletMemo = useMemo(() => installedWallet, [installedWallet]);
 
   return (
     <>
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        <Button onClick={() => setIsOpen(true)}>
-          {address.length > 0
-            ? connected
-              ? address.slice(0, 4) + "..." + address.slice(-4)
-              : "Connect Wallet"
-            : "Connect Wallet"}
-        </Button>
-        <SheetContent>
+        {isOpenProp === undefined && (
+          <Button
+            variant={"gradient"}
+            className="flex items-center gap-1.5"
+            onClick={() => setIsOpen(true)}
+          >
+            <MdWallet className="w-5 h-5" />
+            {address.length > 0
+              ? connected
+                ? address.slice(0, 4) + "..." + address.slice(-4)
+                : "Connect Wallet"
+              : "Connect Wallet"}
+          </Button>
+        )}
+
+        <SheetContent
+          aria-describedby={undefined}
+          side="bottom"
+          className="h-[200px]"
+        >
           <SheetHeader>
             <SheetTitle>Wallet</SheetTitle>
           </SheetHeader>
-          <div className="flex mt-6 w-full">
+          <div className="flex mt-6 md:max-w-[400px] w-full">
             {connected ? (
-              <div className="flex gap-2 w-full items-center">
+              <div className="flex gap-2 w-full items-center border rounded-md p-4">
                 <Avatar>
                   <AvatarImage
                     src={"https://github.com/shadcn.png"}

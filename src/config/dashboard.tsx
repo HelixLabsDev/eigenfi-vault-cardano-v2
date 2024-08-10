@@ -1,0 +1,62 @@
+import { FaXTwitter, FaGithub, FaDiscord } from "react-icons/fa6";
+import { RiInstagramFill } from "react-icons/ri";
+
+export const navItem = [
+  {
+    name: "Stake",
+    href: "/",
+    icon: (
+      <svg
+        aria-hidden="true"
+        focusable="false"
+        data-prefix="far"
+        data-icon="swap-arrows"
+        className="w-5 h-5"
+        role="img"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 640 512"
+        fontSize="20px"
+        display="inline-block"
+      >
+        <path
+          fill="currentColor"
+          d="M111 7c9.4-9.4 24.6-9.4 33.9 0l88 88c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-47-47V360c0 39.8 32.2 72 72 72s72-32.2 72-72V152c0-66.3 53.7-120 120-120s120 53.7 120 120l0 278.1 47-47c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-88 88c-9.4 9.4-24.6 9.4-33.9 0l-88-88c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47V152c0-39.8-32.2-72-72-72s-72 32.2-72 72V360c0 66.3-53.7 120-120 120s-120-53.7-120-120l0-278.1L57 129c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9L111 7z"
+        ></path>
+      </svg>
+    ),
+  },
+  { name: "Dashboard", href: "/dashboard" },
+
+  { name: "Bridge", href: "/bridge" },
+];
+
+export const socials = [
+  {
+    name: "Twitter",
+    href: "",
+    icon: FaXTwitter,
+  },
+  {
+    name: "Instagram",
+    href: "",
+    icon: RiInstagramFill,
+  },
+  {
+    name: "Github",
+    href: "",
+    icon: FaGithub,
+  },
+  {
+    name: "Discord",
+    href: "",
+    icon: FaDiscord,
+  },
+];
+
+export const data = {
+  protocol: "MockToken",
+  deposit: "Paid",
+  asset: "MTK",
+  balance: "",
+  other: "",
+};
