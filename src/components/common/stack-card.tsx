@@ -76,7 +76,8 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
       });
 
       if (!points) return;
-      setHistory(JSON.parse(points[0].history)[0]);
+      if(points.length === 0) return ;
+      setHistory(JSON.parse(points[0]?.history)[0]);
     };
     fetch();
   }, [address]);

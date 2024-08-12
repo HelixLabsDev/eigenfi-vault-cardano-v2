@@ -61,7 +61,7 @@ async function getUnlockTx(
         inputScript: {
           script,
           datum: "inline",
-          redeemer: new DataB(fromAscii("Hello plu-ts")),
+          redeemer: new DataB(fromAscii("EigenFi - Cardano")),
         },
       },
     ],

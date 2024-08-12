@@ -6,7 +6,7 @@ const helloPluts = pfn([
   PScriptContext.type
 ], bool)
 ((owner, message, ctx) => {
-  const isBeingPolite = message.eq("Hello plu-ts");
+  const isBeingPolite = message.eq("EigenFi - Cardano");
   const signedByOwner = ctx.tx.signatories.some(owner.eq);
   return isBeingPolite.and(signedByOwner);
 });
