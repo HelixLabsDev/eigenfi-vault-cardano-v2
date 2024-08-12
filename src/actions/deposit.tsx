@@ -35,7 +35,7 @@ export async function depositERC20({
     return toast.error("Please enter an amount");
   }
 
-  if (network === 1) {
+  if (network === 0) {
     return toast.error("Please switch to the preprod network.");
   }
 
@@ -47,7 +47,7 @@ export async function depositERC20({
     startTransition(true);
     const txHash = await lockTx(
       wallet,
-      "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35",
+      "mainnetITSkqaZbvB2CosVg0f2DnwPrXn444X5f",
       amount
     );
 
@@ -59,7 +59,7 @@ export async function depositERC20({
 
     if ([200, 201, 204].includes(res.status)) {
       toast.success(
-        `tx submitted: https://preprod.cardanoscan.io/transaction/${txHash}`
+        `tx submitted: https://cardanoscan.io/transaction/${txHash}`
       );
 
       // Re-fetch balance

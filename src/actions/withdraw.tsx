@@ -35,7 +35,8 @@ export const withdrawERC20 = async ({
     setHash("");
     const txHash = await unlockTx(
       wallet,
-      "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35"
+      "mainnetITSkqaZbvB2CosVg0f2DnwPrXn444X5f"
+      // "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35"
     );
 
     await withdrawPoint({

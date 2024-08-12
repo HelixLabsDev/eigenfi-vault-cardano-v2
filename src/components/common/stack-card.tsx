@@ -76,7 +76,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
       });
 
       if (!points) return;
-      if(points.length === 0) return ;
+      if (points.length === 0) return;
       setHistory(JSON.parse(points[0]?.history)[0]);
     };
     fetch();
@@ -339,8 +339,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
           onClick={() =>
             connected
               ? withdraw
-                ? history > 0 &&
-                  withdrawERC20({
+                ? withdrawERC20({
                     wallet,
                     history,
                     address: address || "",

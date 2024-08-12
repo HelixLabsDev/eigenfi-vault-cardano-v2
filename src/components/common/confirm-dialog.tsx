@@ -80,7 +80,7 @@ export default function ConfirmDialog({
                   <div className="text-foreground/70 font-thin">
                     View your transaction on
                     <Link
-                      href={`https://preprod.cardanoscan.io/transaction/${hash}`}
+                      href={`https://cardanoscan.io/transaction/${hash}`}
                       target="_blank"
                       className="text-aquamarine-300 ps-1 font-light"
                     >
@@ -116,7 +116,7 @@ export default function ConfirmDialog({
                 <div className="text-foreground/70 font-thin">
                   Transaction can be viewed on
                   <Link
-                    href={`https://preprod.cardanoscan.io/transaction/${hash}`}
+                    href={`https://cardanoscan.io/transaction/${hash}`}
                     target="_blank"
                     className="text-aquamarine-300 ps-1 font-light"
                   >
