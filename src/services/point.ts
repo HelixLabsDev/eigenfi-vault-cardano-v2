@@ -25,15 +25,18 @@ async function createPoint({
     data: findData,
     error: findError,
     status: findStatus,
-  } = await supabase.from("users_cardano").select("*").eq("address", address);
+  } = await supabase
+    .from("users_cardano")
+    .select("*")
+    .eq("address", address)
+    .maybeSingle();
 
   if (findError) {
     return { error: findError, status: findStatus, points: null };
   }
 
-  let history = findData[0]?.history && JSON.parse(findData[0]?.history);
-
-  if (findData?.length > 0) {
+  if (findData) {
+    let history = findData.history ? JSON.parse(findData.history) : [];
     history.push(amount);
 
     const {
@@ -43,10 +46,11 @@ async function createPoint({
     } = await supabase
       .from("users_cardano")
       .update({
-        amount: findData[0].amount + amount,
+        amount: findData.amount + amount,
         history: JSON.stringify(history),
       })
-      .eq("address", address);
+      .eq("address", address)
+      .maybeSingle();
 
     return { points: updatePoints, error: updateError, status: updateStatus };
   } else {
@@ -54,14 +58,18 @@ async function createPoint({
       data: points,
       status,
       error,
-    } = await supabase.from("users_cardano").insert({
-      amount: amount,
-      point: 0,
-      address: address,
-      created_at: Date.now(),
-      total_balance: total_balance,
-      history: JSON.stringify([amount]),
-    });
+    } = await supabase
+      .from("users_cardano")
+      .insert({
+        amount,
+        point: 0,
+        address,
+        created_at: Date.now(),
+        total_balance,
+        history: JSON.stringify([amount]),
+      })
+      .select() // Ensures the inserted data is returned.
+      .single();
 
     return { points, error, status };
   }

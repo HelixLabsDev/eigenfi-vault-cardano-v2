@@ -36,7 +36,7 @@ export async function depositERC20({
   }
 
   if (network === 0) {
-    return toast.error("Please switch to the preprod network.");
+    return toast.error("Please switch to the mainnet network.");
   }
 
   try {

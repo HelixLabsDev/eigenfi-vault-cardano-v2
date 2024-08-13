@@ -20,7 +20,7 @@ async function getLockTx(
     throw new Error("have you requested founds from the faucet?");
   }
 
-  const utxo = myUTxOs.find((u) => u.resolved.value.lovelaces > 15_000_000);
+  const utxo = myUTxOs.find((u) => u.resolved.value.lovelaces > 1_000_000);
 
   if (utxo === undefined) {
     throw new Error("not enough ada");

@@ -66,6 +66,7 @@ export const withdrawERC20 = async ({
         startTransition(false);
       });
   } catch (err) {
+    setFailed("An error occurred");
     handleError(err);
     startTransition(false);
   }

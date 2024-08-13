@@ -236,33 +236,6 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                       </Button>
                     </div>
                   </div>{" "}
-                  {/* <div className="relative">
-                    <div className="flex justify-center bg-black w-8 h-8 items-center rounded-sm absolute -top-5 left-[48%]">
-                      <ArrowDown className="w-5 h-5 text-muted-foreground animate-pulse" />
-                    </div>
-
-                    <div className="absolute top-2 left-3 text-sm text-muted-foreground/50">
-                      Recieve
-                    </div>
-                    <Input
-                      id="pay"
-                      placeholder="Earning Helix Points"
-                      className="bg-white/5 border-0 focus-visible:ring-offset-0 focus-visible:ring-[0.2px] min-h-[100px] py-[40px] text-2xl md:text-[32px] pe-[90px]"
-                      disabled
-                    />
-                    <Select defaultValue="mtk">
-                      <SelectTrigger
-                        id="mtk"
-                        className="absolute top-1/3 w-22 right-3"
-                        disabled
-                      >
-                        <SelectValue placeholder="Select" />
-                      </SelectTrigger>
-                      <SelectContent position="popper">
-                        <SelectItem value="mtk">MTK</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div> */}
                 </div>
               </div>
             </TabsContent>

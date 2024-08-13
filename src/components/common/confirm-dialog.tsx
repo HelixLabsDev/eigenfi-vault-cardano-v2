@@ -71,9 +71,9 @@ export default function ConfirmDialog({
             {withdraw ? (
               success ? (
                 <div>
-                  <h4 className="font-bold text-base text-foreground mt-3.5">
+                  <p className="font-bold text-base text-foreground mt-3.5">
                     Withdrawal request successfully sent
-                  </h4>
+                  </p>
                   <p className="text-foreground/70 mt-1 font-thin">
                     Withdrawal request for {history} MTK has been sent.
                   </p>
@@ -90,16 +90,16 @@ export default function ConfirmDialog({
                 </div>
               ) : failed.length > 0 ? (
                 <div>
-                  <h4 className="font-bold text-base text-foreground mt-3.5">
+                  <p className="font-bold text-base text-foreground mt-3.5">
                     Transaction Failed
-                  </h4>
+                  </p>
                   <p className="text-foreground/70 mt-1 font-thin">{failed}</p>
                 </div>
               ) : (
                 <div>
-                  <h4 className="font-bold text-base text-foreground mt-3.5">
+                  <p className="font-bold text-base text-foreground mt-3.5">
                     You are requesting withdrawal for {history} MTK.
-                  </h4>
+                  </p>
                   <p className="text-foreground/70 mt-1 font-thin">
                     Requesting withdrawal for {history} Mock Token.
                   </p>
@@ -107,9 +107,9 @@ export default function ConfirmDialog({
               )
             ) : success ? (
               <div>
-                <h4 className="font-bold text-base text-foreground mt-3.5">
+                <p className="font-bold text-base text-foreground mt-3.5">
                   Your new balance is {amount} MTK +
-                </h4>
+                </p>
                 <p className="text-foreground/70 mt-1 font-thin">
                   Staking operation was successful.
                 </p>
@@ -126,16 +126,16 @@ export default function ConfirmDialog({
               </div>
             ) : failed.length > 0 ? (
               <div>
-                <h4 className="font-bold text-base text-foreground mt-3.5">
+                <p className="font-bold text-base text-foreground mt-3.5">
                   Transaction Failed
-                </h4>
+                </p>
                 <p className="text-foreground/70 mt-1 font-thin">{failed}</p>
               </div>
             ) : (
               <div>
-                <h4 className="font-bold text-base text-foreground mt-3.5">
+                <p className="font-bold text-base text-foreground mt-3.5">
                   You are staking {amount} MTK.
-                </h4>
+                </p>
                 <p className="text-foreground/70 mt-1 font-thin">
                   You can withdraw anytime you want.
                 </p>
