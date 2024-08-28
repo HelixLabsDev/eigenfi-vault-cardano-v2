@@ -17,7 +17,7 @@ export default function SelectDomain() {
   return (
     <div>
       <Select
-        defaultValue="Ethereum"
+        defaultValue="Cardano"
         onValueChange={(value) =>
           domains.find((domain) => domain.name === value)?.link &&
           router.push(
