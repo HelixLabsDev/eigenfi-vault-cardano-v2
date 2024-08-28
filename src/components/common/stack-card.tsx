@@ -84,7 +84,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const balance = await getBalance();
+      const balance: any = await getBalance();
       setTotalBalance(balance[0].quantity);
     };
     fetchBalance();
@@ -130,7 +130,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
         : setBalance("0");
     } else {
       // MockToken Balance
-      const balance = await getBalance();
+      const balance: any = await getBalance();
       setBalance((balance[0]?.quantity / 1e6).toString());
     }
   };

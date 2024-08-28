@@ -66,7 +66,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const balance = await getBalance();
+      const balance: any = await getBalance();
       setBalance(balance[0].quantity);
     };
     fetchBalance();

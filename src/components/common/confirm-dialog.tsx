@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Dialog,
   DialogContent,
@@ -6,11 +7,12 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Dispatch, SetStateAction } from "react";
-import LottiePlayer from "lottie-react";
-import animation from "@/assets/lottie/check.json";
-import animation2 from "@/assets/lottie/warn.json";
-import animation3 from "@/assets/lottie/loading.json";
+// import Lottie from "lottie-react";
+// import animation from "@/assets/lottie/check.json";
+// import animation2 from "@/assets/lottie/warn.json";
+// import animation3 from "@/assets/lottie/loading.json";
 import Link from "next/link";
+import { CircleCheckBig, CircleX, Loader } from "lucide-react";
 
 export default function ConfirmDialog({
   open,
@@ -39,32 +41,41 @@ export default function ConfirmDialog({
         <DialogHeader className="py-6">
           <DialogTitle className="mx-auto ">
             {success ? (
-              <LottiePlayer
-                animationData={animation}
-                loop={false}
-                style={{
-                  width: "92px",
-                  height: "92px",
-                }}
-              />
+              // <Lottie
+              //   animationData={animation && animation}
+              //   loop={false}
+              //   style={{
+              //     width: "92px",
+              //     height: "92px",
+              //   }}
+              // />
+              <div>
+                <CircleCheckBig className="w-12 h-12 text-green-600" />
+              </div>
             ) : failed.length > 0 ? (
-              <LottiePlayer
-                animationData={animation2}
-                loop={false}
-                style={{
-                  width: "104px",
-                  height: "104px",
-                }}
-              />
+              // <Lottie
+              //   animationData={animation2 && animation2}
+              //   loop={false}
+              //   style={{
+              //     width: "104px",
+              //     height: "104px",
+              //   }}
+              // />
+              <div>
+                <CircleX className="w-12 h-12 text-destructive" />
+              </div>
             ) : (
-              <LottiePlayer
-                animationData={animation3}
-                loop={true}
-                style={{
-                  width: "104px",
-                  height: "104px",
-                }}
-              />
+              // <Lottie
+              //   animationData={animation3 && animation3}
+              //   loop={true}
+              //   style={{
+              //     width: "104px",
+              //     height: "104px",
+              //   }}
+              // />
+              <div>
+                <Loader className="animate-spin w-12 h-12" />
+              </div>
             )}
           </DialogTitle>
           <DialogDescription className="text-center text-sm">
