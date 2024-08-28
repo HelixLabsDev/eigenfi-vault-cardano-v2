@@ -5,6 +5,7 @@ import SideBarContent from "./sidebar-content";
 import { getAddress } from "@/services/web3";
 
 import ConnectionHandler from "../connect-button";
+import SelectDomain from "./select-domain";
 
 export default function Header() {
   const [address, setAddress] = useState("");
@@ -36,6 +37,7 @@ export default function Header() {
         </div>
         <div className="md:flex gap-4 hidden">
           <SideBarContent />
+          <SelectDomain />
         </div>
       </div>
 
