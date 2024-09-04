@@ -12,6 +12,8 @@ import { ChevronRight, LogOut } from "lucide-react";
 import { getAddress, getInstalled } from "@/services/web3";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { MdWallet } from "react-icons/md";
+import { checkSignature, generateNonce } from "@meshsdk/core";
+import { toast } from "sonner";
 
 export default function ConnectionHandler({
   isOpenProp,
@@ -21,7 +23,7 @@ export default function ConnectionHandler({
   setIsOpenProp?: any;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { connect, disconnect, connected } = useWallet();
+  const { connect, disconnect, connected, wallet } = useWallet();
   const [address, setAddress] = useState("");
   const [installedWallet, setInstalledWallet] = useState<any>([]);
 
@@ -41,6 +43,28 @@ export default function ConnectionHandler({
     if (walletprovider) connect(walletprovider);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const check = localStorage.getItem("checkSignature");
+      if (connected && check !== "true") {
+        const rewardAddress = (await wallet.getRewardAddresses())[0];
+        const uuid = generateNonce("Sign to login in to Mesh:");
+        const signature = await wallet.signData(uuid, rewardAddress);
+        const result = checkSignature(uuid, rewardAddress, signature);
+
+        if (result) {
+          localStorage.setItem("checkSignature", result.toString());
+          toast.success("Signature verified");
+        } else {
+          toast.error("Signature not verified");
+        }
+      }
+    };
+
+    fetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [connected]);
 
   useEffect(() => {
     isOpenProp && setIsOpen(true);
