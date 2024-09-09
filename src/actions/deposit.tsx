@@ -1,5 +1,6 @@
 import { lockTx } from "@/offchain/lockTx";
 import { createPoint } from "@/services/point";
+import { checkSignature, generateNonce } from "@meshsdk/core";
 import { Dispatch, SetStateAction } from "react";
 
 export async function depositERC20({
@@ -35,9 +36,16 @@ export async function depositERC20({
     return toast.error("Please enter an amount");
   }
 
-  if (network === 0) {
-    return toast.error("Please switch to the mainnet network.");
+  if (network === 1) {
+    return toast.error("Please switch to the testnet network.");
   }
+
+  const userAddress = (await wallet.getRewardAddresses())[0];
+  const nonce = generateNonce("Sign to login in to Mesh:");
+  const signature = await wallet.signData(nonce, userAddress);
+  const result = checkSignature(nonce, signature);
+
+  if (!result) throw new Error("invalid signature");
 
   try {
     setOpenShow(true);
@@ -47,7 +55,7 @@ export async function depositERC20({
     startTransition(true);
     const txHash = await lockTx(
       wallet,
-      "mainnetITSkqaZbvB2CosVg0f2DnwPrXn444X5f",
+      "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35",
       amount
     );
 

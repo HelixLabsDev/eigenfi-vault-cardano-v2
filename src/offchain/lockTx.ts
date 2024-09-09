@@ -1,7 +1,14 @@
-import { Value, DataB, Address, Tx } from "@harmoniclabs/plu-ts";
+import {
+  Value,
+  DataB,
+  Address,
+  Tx,
+  StakeCredentials,
+  Hash28,
+} from "@harmoniclabs/plu-ts";
 import { BlockfrostPluts } from "@harmoniclabs/blockfrost-pluts";
-import { BrowserWallet } from "@meshsdk/core";
-import { scriptTestnetAddr } from "../contracts/helloPluts";
+import { BrowserWallet, checkSignature, generateNonce } from "@meshsdk/core";
+import { scriptTestnetAddrWithStake } from "../contracts/helloPluts";
 import { toPlutsUtxo } from "./mesh-utils";
 import getTxBuilder from "./getTxBuilder";
 
@@ -12,6 +19,17 @@ async function getLockTx(
 ): Promise<Tx> {
   // creates an address form the bech32 form
   const myAddr = Address.fromString(await wallet.getChangeAddress());
+  console.log("myAddr: ", myAddr);
+
+  // const scriptHash = Address.fromString(
+  //   "addr_test1wzsqtkns0vgjvr34fx0fpszxj2957w0tq6gd4842ls56mqcjyyxzu"
+  // ).paymentCreds.hash;
+
+  // const frankenAddress = new Address(
+  //   myAddr.network,
+  //   myAddr.paymentCreds,
+  //   new StakeCredentials("script", new Hash28(scriptHash))
+  // );
 
   const txBuilder = await getTxBuilder(Blockfrost);
   const myUTxOs = (await wallet.getUtxos()).map(toPlutsUtxo);
@@ -20,7 +38,7 @@ async function getLockTx(
     throw new Error("have you requested founds from the faucet?");
   }
 
-  const utxo = myUTxOs.find((u) => u.resolved.value.lovelaces > 1_000_000);
+  const utxo = myUTxOs.find((u) => u.resolved.value.lovelaces > 15_000_000);
 
   if (utxo === undefined) {
     throw new Error("not enough ada");
@@ -31,18 +49,12 @@ async function getLockTx(
     outputs: [
       {
         // output holding the founds that we'll spend later
-        address: scriptTestnetAddr,
-        // 10M lovelaces === 10 ADA
+        address: scriptTestnetAddrWithStake,
         value: Value.lovelaces(amount * 1e6),
         // remeber to include a datum
-        datum: new DataB(
-          // remember we set the datum to be the public key hash?
-          // we can extract it from the address as follows
-          myAddr.paymentCreds.hash.toBuffer()
-        ),
+        datum: new DataB(myAddr.paymentCreds.hash.toBuffer()),
       },
     ],
-    // send everything left back to us
     changeAddress: myAddr,
   });
 }
@@ -56,5 +68,6 @@ export async function lockTx(
   const unsingedTx = await getLockTx(wallet, Blockfrost, amount);
 
   const txStr = await wallet.signTx(unsingedTx.toCbor().toString());
+
   return await Blockfrost.submitTx(txStr);
 }

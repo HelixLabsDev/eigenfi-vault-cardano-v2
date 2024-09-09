@@ -14,6 +14,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { MdWallet } from "react-icons/md";
 import { checkSignature, generateNonce } from "@meshsdk/core";
 import { toast } from "sonner";
+import { decodeBech32, encodeBech32 } from "@harmoniclabs/crypto";
+import { Address } from "@harmoniclabs/cardano-ledger-ts";
 
 export default function ConnectionHandler({
   isOpenProp,
@@ -44,27 +46,28 @@ export default function ConnectionHandler({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const check = localStorage.getItem("checkSignature");
-      if (connected && check !== "true") {
-        const rewardAddress = (await wallet.getRewardAddresses())[0];
-        const uuid = generateNonce("Sign to login in to Mesh:");
-        const signature = await wallet.signData(uuid, rewardAddress);
-        const result = checkSignature(uuid, rewardAddress, signature);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const check = localStorage.getItem("checkSignature");
+  //     if (connected && check !== "true") {
+  //       const nonce = generateNonce("Sign to login in to Mesh: ");
+  //       console.log("nonce: ", nonce);
+  //       const userAddress = (await wallet.getRewardAddresses())[0];
+  //       const signature = await wallet.signData(nonce, userAddress);
+  //       const result = checkSignature(nonce, signature);
 
-        if (result) {
-          localStorage.setItem("checkSignature", result.toString());
-          toast.success("Signature verified");
-        } else {
-          toast.error("Signature not verified");
-        }
-      }
-    };
+  //       if (result) {
+  //         localStorage.setItem("checkSignature", result.toString());
+  //         toast.success("Signature verified");
+  //       } else {
+  //         toast.error("Signature not verified");
+  //       }
+  //     }
+  //   };
 
-    fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connected]);
+  //   fetch();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [connected]);
 
   useEffect(() => {
     isOpenProp && setIsOpen(true);
