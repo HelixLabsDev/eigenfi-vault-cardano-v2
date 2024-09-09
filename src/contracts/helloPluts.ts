@@ -41,3 +41,8 @@ export const scriptTestnetAddrWithStake = new Address(
   PaymentCredentials.script(script.hash),
   stakeWallet.stakeCreds
 );
+
+export const scriptTestnetAddr = new Address(
+  "testnet",
+  PaymentCredentials.script(script.hash)
+);

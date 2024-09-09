@@ -46,28 +46,28 @@ export default function ConnectionHandler({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const check = localStorage.getItem("checkSignature");
-      if (connected && check !== "true") {
-        const nonce = generateNonce("Sign to login in to Mesh: ");
-        console.log("nonce: ", nonce);
-        const userAddress = (await wallet.getRewardAddresses())[0];
-        const signature = await wallet.signData(nonce, userAddress);
-        const result = checkSignature(nonce, signature);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const check = localStorage.getItem("checkSignature");
+  //     if (connected && check !== "true") {
+  //       const nonce = generateNonce("Sign to login in to Mesh: ");
+  //       console.log("nonce: ", nonce);
+  //       const userAddress = (await wallet.getRewardAddresses())[0];
+  //       const signature = await wallet.signData(nonce, userAddress);
+  //       const result = checkSignature(nonce, signature);
 
-        if (result) {
-          localStorage.setItem("checkSignature", result.toString());
-          toast.success("Signature verified");
-        } else {
-          toast.error("Signature not verified");
-        }
-      }
-    };
+  //       if (result) {
+  //         localStorage.setItem("checkSignature", result.toString());
+  //         toast.success("Signature verified");
+  //       } else {
+  //         toast.error("Signature not verified");
+  //       }
+  //     }
+  //   };
 
-    fetch();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [connected]);
+  //   fetch();
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [connected]);
 
   useEffect(() => {
     isOpenProp && setIsOpen(true);
