@@ -14,6 +14,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { MdWallet } from "react-icons/md";
 import { checkSignature, generateNonce } from "@meshsdk/core";
 import { toast } from "sonner";
+import { decodeBech32, encodeBech32 } from "@harmoniclabs/crypto";
+import { Address } from "@harmoniclabs/cardano-ledger-ts";
 
 export default function ConnectionHandler({
   isOpenProp,
@@ -48,10 +50,11 @@ export default function ConnectionHandler({
     const fetch = async () => {
       const check = localStorage.getItem("checkSignature");
       if (connected && check !== "true") {
-        const rewardAddress = (await wallet.getRewardAddresses())[0];
-        const uuid = generateNonce("Sign to login in to Mesh:");
-        const signature = await wallet.signData(uuid, rewardAddress);
-        const result = checkSignature(uuid, rewardAddress, signature);
+        const nonce = generateNonce("Sign to login in to Mesh: ");
+        console.log("nonce: ", nonce);
+        const userAddress = (await wallet.getRewardAddresses())[0];
+        const signature = await wallet.signData(nonce, userAddress);
+        const result = checkSignature(nonce, signature);
 
         if (result) {
           localStorage.setItem("checkSignature", result.toString());

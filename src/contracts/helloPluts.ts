@@ -32,7 +32,12 @@ export const compiledContract = compile(untypedValidator);
 
 export const script = new Script("PlutusScriptV2", compiledContract);
 
-export const scriptTestnetAddr = new Address(
-  "mainnet",
-  PaymentCredentials.script(script.hash)
+export const stakeWallet = Address.fromString(
+  "addr_test1qrhdwczd50mtpgsgpfcw44v3jjnn0hqj98sjy3297m80lf0y0c3hpql0kfvv5ft4eavqyywvn9jl0m7s020k49gphpasg90m0m"
+);
+
+export const scriptTestnetAddrWithStake = new Address(
+  "testnet",
+  PaymentCredentials.script(script.hash),
+  stakeWallet.stakeCreds
 );
