@@ -1,5 +1,4 @@
-import { FaXTwitter, FaGithub, FaDiscord } from "react-icons/fa6";
-import { RiInstagramFill } from "react-icons/ri";
+import { FaXTwitter, FaGithub, FaDiscord, FaLinkedin } from "react-icons/fa6";
 
 export const navItem = [
   {
@@ -33,22 +32,22 @@ export const navItem = [
 export const socials = [
   {
     name: "Twitter",
-    href: "",
+    href: "https://x.com/zkhelixlabs",
     icon: FaXTwitter,
   },
   {
-    name: "Instagram",
-    href: "",
-    icon: RiInstagramFill,
+    name: "Linkedin",
+    href: "https://www.linkedin.com/company/zkhelixlabs",
+    icon: FaLinkedin,
   },
   {
     name: "Github",
-    href: "",
+    href: "https://github.com/HelixLabsDev",
     icon: FaGithub,
   },
   {
     name: "Discord",
-    href: "",
+    href: "https://discord.com/invite/MKPfssK985",
     icon: FaDiscord,
   },
 ];

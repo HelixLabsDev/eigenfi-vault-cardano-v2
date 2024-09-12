@@ -52,7 +52,7 @@ export function CardWithBridge() {
                   </SelectContent>
                 </Select>
                 <div className="absolute bottom-3 left-2 text-sm text-muted-foreground">
-                  $123123123
+                  $1000
                 </div>
                 <div className="absolute bottom-3 right-3 text-sm text-muted-foreground flex gap-2">
                   <Button size={"xs"} disabled>
@@ -95,7 +95,7 @@ export function CardWithBridge() {
                   </SelectContent>
                 </Select>
                 <div className="absolute bottom-3 left-2 text-sm text-muted-foreground">
-                  $12312
+                  $100
                 </div>
               </div>
             </div>
@@ -103,8 +103,8 @@ export function CardWithBridge() {
         </form>
       </CardContent>
       <CardFooter className="">
-        <Button className="w-full" variant={"gradient"}>
-          Confirm
+        <Button className="w-full" variant={"gradient"} disabled>
+          Coming Soon!
         </Button>
       </CardFooter>
     </Card>

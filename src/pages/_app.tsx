@@ -1,23 +1,32 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { MeshProvider } from "@meshsdk/react";
-import LocalFont from "next/font/local";
 import ThemeProvider from "@/components/layout/provider";
-
-const calSans = LocalFont({
-  src: "../assets/fonts/CalSans-SemiBold.ttf",
-  variable: "--font-calsans",
-  weight: "600",
-});
+import { cn } from "@/lib/utils";
+import { fontCalSans, fontMichroma } from "@/assets/fonts";
+import { siteConfig } from "@/config/site";
+import Head from "next/head"; // Import Head from Next.js
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <div className={calSans.className}>
-      <MeshProvider>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </MeshProvider>
+    <div>
+      <Head>
+        <title>{siteConfig.name}</title>
+        <meta name="description" content={siteConfig.description} />
+        <meta name="keywords" content={siteConfig.keywords.join(",")} />
+        <meta property="og:url" content={siteConfig.url} />
+        <meta property="og:title" content={siteConfig.name} />
+        <meta property="og:description" content={siteConfig.description} />
+        <meta property="og:image" content={siteConfig.ogImage} />
+        <link rel="icon" href="/icon.png" />
+      </Head>
+      <div className={cn(fontCalSans.className, fontMichroma.variable)}>
+        <MeshProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </MeshProvider>
+      </div>
     </div>
   );
 }
