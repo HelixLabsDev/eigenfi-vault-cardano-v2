@@ -40,12 +40,12 @@ export async function depositERC20({
     return toast.error("Please switch to the testnet network.");
   }
 
-  const userAddress = (await wallet.getRewardAddresses())[0];
-  const nonce = generateNonce("Sign to login in to Mesh:");
-  const signature = await wallet.signData(nonce, userAddress);
-  const result = checkSignature(nonce, signature);
+  // const userAddress = (await wallet.getRewardAddresses())[0];
+  // const nonce = generateNonce("Sign to login in to Mesh:");
+  // const signature = await wallet.signData(nonce, userAddress);
+  // const result = checkSignature(nonce, signature);
 
-  if (!result) throw new Error("invalid signature");
+  // if (!result) throw new Error("invalid signature");
 
   try {
     setOpenShow(true);
@@ -64,8 +64,6 @@ export async function depositERC20({
     //   amount: Number(amount || 0),
     //   total_balance: Number(totalBalance || 0),
     // });
-
-    console.log(txHash, "txHash");
 
     // if ([200, 201, 204].includes(res.status)) {
     if (txHash) {
