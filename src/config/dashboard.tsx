@@ -53,9 +53,9 @@ export const socials = [
 ];
 
 export const data = {
-  protocol: "MockToken",
+  protocol: "tADA",
   deposit: "Paid",
-  asset: "MTK",
+  asset: "tADA",
   balance: "",
   other: "",
 };

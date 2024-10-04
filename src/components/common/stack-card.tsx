@@ -222,7 +222,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                       ) : (
                         <Skeleton className="w-12 h-5 rounded-md" />
                       )}
-                      {" MTK"}
+                      {" tADA"}
                     </div>
                     <div className="absolute bottom-3 right-3 text-sm text-muted-foreground flex gap-2">
                       <Button size={"xs"} onClick={quarter}>
@@ -262,7 +262,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                       }}
                       className="bg-white/5 border-0 focus-visible:ring-offset-0 focus-visible:ring-[0.2px] h-[120px] py-[40px] text-[32px] pe-[80px]"
                     />
-                    <Select defaultValue="mtk">
+                    <Select defaultValue="tada">
                       <SelectTrigger
                         id="framework"
                         className="absolute top-1/4 w-22 right-3"
@@ -270,7 +270,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent position="popper">
-                        <SelectItem value="mtk">MTK</SelectItem>
+                        <SelectItem value="tada">tADA</SelectItem>
                       </SelectContent>
                     </Select>
 
@@ -280,7 +280,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                       ) : (
                         <Skeleton className="w-12 h-5 rounded-md" />
                       )}
-                      {" MTK"}
+                      {" tADA"}
                     </div>
                     <div className="absolute bottom-3 right-3 text-sm text-muted-foreground flex gap-2">
                       <Button size={"xs"} onClick={quarter} disabled>

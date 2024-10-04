@@ -41,7 +41,7 @@ export default function CardWithAbout({ refetch }: { refetch: boolean }) {
                 ) : (
                   <Skeleton className="w-16 h-5 rounded-md" />
                 )}
-                <span>MTK</span>
+                <span>tADA</span>
               </div>
             }
           </CardTitle>

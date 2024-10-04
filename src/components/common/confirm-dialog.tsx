@@ -86,7 +86,7 @@ export default function ConfirmDialog({
                     Withdrawal request successfully sent
                   </p>
                   <p className="text-foreground/70 mt-1 font-thin">
-                    Withdrawal request for {history} MTK has been sent.
+                    Withdrawal request for {history} tADA has been sent.
                   </p>
                   <div className="text-foreground/70 font-thin">
                     View your transaction on
@@ -109,17 +109,17 @@ export default function ConfirmDialog({
               ) : (
                 <div>
                   <p className="font-bold text-base text-foreground mt-3.5">
-                    You are requesting withdrawal for {history} MTK.
+                    You are requesting withdrawal for {history} tADA.
                   </p>
                   <p className="text-foreground/70 mt-1 font-thin">
-                    Requesting withdrawal for {history} Mock Token.
+                    Requesting withdrawal for {history} Testnet ADA.
                   </p>
                 </div>
               )
             ) : success ? (
               <div>
                 <p className="font-bold text-base text-foreground mt-3.5">
-                  Your new balance is {amount} MTK +
+                  Your new balance is {amount} tADA +
                 </p>
                 <p className="text-foreground/70 mt-1 font-thin">
                   Staking operation was successful.
@@ -145,7 +145,7 @@ export default function ConfirmDialog({
             ) : (
               <div>
                 <p className="font-bold text-base text-foreground mt-3.5">
-                  You are staking {amount} MTK.
+                  You are staking {amount} tADA.
                 </p>
                 <p className="text-foreground/70 mt-1 font-thin">
                   You can withdraw anytime you want.
