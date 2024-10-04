@@ -12,10 +12,6 @@ import { ChevronRight, LogOut } from "lucide-react";
 import { getAddress, getInstalled } from "@/services/web3";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { MdWallet } from "react-icons/md";
-import { checkSignature, generateNonce } from "@meshsdk/core";
-import { toast } from "sonner";
-import { decodeBech32, encodeBech32 } from "@harmoniclabs/crypto";
-import { Address } from "@harmoniclabs/cardano-ledger-ts";
 
 export default function ConnectionHandler({
   isOpenProp,

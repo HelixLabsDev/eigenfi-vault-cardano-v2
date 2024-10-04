@@ -39,32 +39,47 @@ export const withdrawERC20 = async ({
       "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35"
     );
 
-    await withdrawPoint({
-      address: address.toString(),
-      // amount: Number(amount),
-    })
-      .then((res) => {
-        if (res.status === 201 || res.status === 200 || res.status === 204) {
-          toast.success("Withdraw successful");
+    // if (res.status === 201 || res.status === 200 || res.status === 204) {
+    if (txHash) {
+      toast.success("Withdraw successful");
 
-          reFetchBalance();
-          startTransition(false);
-          setSuccess(true);
+      reFetchBalance();
+      startTransition(false);
+      setSuccess(true);
 
-          setHash(txHash);
-        } else {
-          toast.error(
-            `Withdraw failed. Please try again. If the problem persists, please contact us.`
-          );
-        }
-      })
-      .catch((err) => {
-        handleError(err);
-        setFailed(
-          err.reason || err.data?.message || err.message || "An error occurred"
-        );
-        startTransition(false);
-      });
+      setHash(txHash);
+    } else {
+      toast.error(
+        `Withdraw failed. Please try again. If the problem persists, please contact us.`
+      );
+    }
+
+    // await withdrawPoint({
+    //   address: address.toString(),
+    //   // amount: Number(amount),
+    // })
+    //   .then((res) => {
+    //     if (res.status === 201 || res.status === 200 || res.status === 204) {
+    //       toast.success("Withdraw successful");
+
+    //       reFetchBalance();
+    //       startTransition(false);
+    //       setSuccess(true);
+
+    //       setHash(txHash);
+    //     } else {
+    //       toast.error(
+    //         `Withdraw failed. Please try again. If the problem persists, please contact us.`
+    //       );
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     handleError(err);
+    //     setFailed(
+    //       err.reason || err.data?.message || err.message || "An error occurred"
+    //     );
+    //     startTransition(false);
+    //   });
   } catch (err) {
     setFailed("An error occurred");
     handleError(err);

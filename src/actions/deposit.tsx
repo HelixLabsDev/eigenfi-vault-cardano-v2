@@ -59,13 +59,16 @@ export async function depositERC20({
       amount
     );
 
-    const res = await createPoint({
-      address: address.toString(),
-      amount: Number(amount || 0),
-      total_balance: Number(totalBalance || 0),
-    });
+    // const res = await createPoint({
+    //   address: address.toString(),
+    //   amount: Number(amount || 0),
+    //   total_balance: Number(totalBalance || 0),
+    // });
 
-    if ([200, 201, 204].includes(res.status)) {
+    console.log(txHash, "txHash");
+
+    // if ([200, 201, 204].includes(res.status)) {
+    if (txHash) {
       toast.success(
         `tx submitted: https://cardanoscan.io/transaction/${txHash}`
       );

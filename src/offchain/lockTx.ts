@@ -7,15 +7,11 @@ import {
   Hash28,
 } from "@harmoniclabs/plu-ts";
 import { BlockfrostPluts } from "@harmoniclabs/blockfrost-pluts";
-import {
-  BrowserWallet,
-  checkSignature,
-  generateNonce,
-  Transaction,
-} from "@meshsdk/core";
-import { scriptTestnetAddrWithStake } from "../contracts/helloPluts";
+import { BrowserWallet } from "@meshsdk/core";
+// import { scriptTestnetAddrWithStake } from "../contracts/helloPluts";
 import { toPlutsUtxo } from "./mesh-utils";
 import getTxBuilder from "./getTxBuilder";
+import { scriptTestnetAddr } from "@/contracts/helloPluts";
 
 async function getLockTx(
   wallet: BrowserWallet,
@@ -44,7 +40,7 @@ async function getLockTx(
     outputs: [
       {
         // output holding the founds that we'll spend later
-        address: scriptTestnetAddrWithStake,
+        address: scriptTestnetAddr,
         value: Value.lovelaces(amount * 1e6),
         // remeber to include a datum
         datum: new DataB(myAddr.paymentCreds.hash.toBuffer()),
