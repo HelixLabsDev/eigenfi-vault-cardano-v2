@@ -49,7 +49,7 @@ export async function unlockAsset(
 }
 
 export async function mainUnlock(wallet: BrowserWallet, depoHash: string) {
-  const message = "Hello, World!";
+  const message = "EigenFi - Vault";
 
   const hashLast = (await wallet.getUtxos())[
     (await wallet.getUtxos()).length - 1

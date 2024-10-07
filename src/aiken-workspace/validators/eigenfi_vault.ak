@@ -10,14 +10,14 @@ pub type Redeemer {
   msg: ByteArray,
 }
 
-validator hello_world {
+validator eigenfi_vault {
   spend(
     datum: Option<Datum>,
     redeemer: Redeemer,
     _: OutputReference,
     transaction: Transaction,
   ) {
-    let must_say_hello = redeemer.msg == "Hello, World!"
+    let must_say_hello = redeemer.msg == "EigenFi - Vault"
 
     expect Some(Datum { owner }) = datum
 

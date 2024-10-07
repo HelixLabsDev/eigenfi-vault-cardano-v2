@@ -8,7 +8,7 @@ import {
 import { applyParamsToScript } from "@meshsdk/core-csl";
 
 export const blockfrost_api_key =
-  process.env.BLOCKFROST_API_KEY || "preprodZezmt75yRNhTLacmA5drlIWZUzxNPfCl";
+  process.env.NEXT_PUBLIC_BLOCKFROST_API_KEY ?? "";
 
 const blockchainProvider = new BlockfrostProvider(blockfrost_api_key);
 
