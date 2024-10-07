@@ -1,5 +1,4 @@
 import { mainUnlock } from "@/components/aiken/unlock-assets";
-import { withdrawPoint } from "@/services/point";
 import { Dispatch, SetStateAction, TransitionStartFunction } from "react";
 
 export const withdrawERC20 = async ({
