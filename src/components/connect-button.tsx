@@ -33,6 +33,9 @@ export default function ConnectionHandler({
   const [address, setAddress] = useState("");
   const [installedWallets, setInstalledWallets] = useState<Wallet[]>([]);
 
+  const wallets = useWalletList();
+  console.log("wallets", wallets);
+
   useEffect(() => {
     const fetchWallets = async () => {
       try {
@@ -52,6 +55,8 @@ export default function ConnectionHandler({
     const walletprovider = localStorage.getItem("walletprovider");
     if (walletprovider) connect(walletprovider);
   }, [connect]);
+
+  console.log("installedWallets", installedWallets);
 
   useEffect(() => {
     if (isOpenProp) setIsOpen(true);
