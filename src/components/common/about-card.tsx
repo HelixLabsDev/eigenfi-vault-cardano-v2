@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
-import { totalFundBalance } from "@/services/point";
 import { getAddress } from "@/lib/web3";
 import { useWallet } from "@meshsdk/react";
 
@@ -22,13 +21,13 @@ export default function CardWithAbout({ refetch }: { refetch: boolean }) {
   }, [connected]);
   const [balance, setBalance] = useState<string>("");
 
-  useEffect(() => {
-    const fetch = async () => {
-      const res = await totalFundBalance();
-      setBalance(res.totalBalance.toString());
-    };
-    fetch();
-  }, [address, refetch]);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const res = await totalFundBalance();
+  //     setBalance(res.totalBalance.toString());
+  //   };
+  //   fetch();
+  // }, [address, refetch]);
 
   return (
     <div className="flex flex-col gap-4 max-w-[500px] w-full">

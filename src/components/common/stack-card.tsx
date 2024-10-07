@@ -27,10 +27,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 import { formatNumber } from "@/lib/utils";
-import { calculatePoints, getPointsByAddress } from "@/services/point";
 import { useNetwork, useWallet } from "@meshsdk/react";
 import { getAddress, getBalance } from "@/lib/web3";
-import { getTotalStakedBalance } from "@/services/point";
 import ConfirmDialog from "./confirm-dialog";
 import ConnectionHandler from "../connect-button";
 
@@ -67,20 +65,20 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
     connected && fetchAddress();
   }, [connected]);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const addressMy = await getAddress();
-      if (!addressMy) return;
-      const { points } = await getPointsByAddress({
-        address: addressMy.toString(),
-      });
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const addressMy = await getAddress();
+  //     if (!addressMy) return;
+  //     const { points } = await getPointsByAddress({
+  //       address: addressMy.toString(),
+  //     });
 
-      if (!points) return;
-      if (points.length === 0) return;
-      setHistory(JSON.parse(points[0]?.history)[0]);
-    };
-    connected && fetch();
-  }, [address, connected]);
+  //     if (!points) return;
+  //     if (points.length === 0) return;
+  //     setHistory(JSON.parse(points[0]?.history)[0]);
+  //   };
+  //   connected && fetch();
+  // }, [address, connected]);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -93,13 +91,14 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
   useEffect(() => {
     const fetch = async () => {
       if (withdraw) {
-        // EigenFiPool Staked Balance
-        const amount = await getTotalStakedBalance({
-          address: address.toString(),
-        });
-        amount?.points?.length
-          ? setBalance(amount.points[0].amount)
-          : setBalance("0");
+        // // EigenFiPool Staked Balance
+        // const amount = await getTotalStakedBalance({
+        //   address: address.toString(),
+        // });
+        // amount?.points?.length
+        //   ? setBalance(amount.points[0].amount)
+        //   : setBalance("0");
+        setBalance("0");
       } else {
         setBalance((totalBalance / 1e6).toString());
       }
@@ -122,12 +121,13 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
   const reFetchBalance = async () => {
     setRefetch(true);
     if (withdraw) {
-      const amount = await getTotalStakedBalance({
-        address: address.toString(),
-      });
-      amount?.points?.length
-        ? setBalance(amount.points[0].amount)
-        : setBalance("0");
+      // const amount = await getTotalStakedBalance({
+      //   address: address.toString(),
+      // });
+      // amount?.points?.length
+      //   ? setBalance(amount.points[0].amount)
+      //   : setBalance("0");
+      setBalance("0");
     } else {
       // MockToken Balance
       const balance: any = await getBalance();
@@ -141,9 +141,9 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
     toast.error(errorMessage);
   };
 
-  useEffect(() => {
-    calculatePoints({ address: address?.toString() || "" });
-  }, [address]);
+  // useEffect(() => {
+  //   calculatePoints({ address: address?.toString() || "" });
+  // }, [address]);
 
   return (
     <Card className="max-w-[500px] w-full rounded-3xl relative">

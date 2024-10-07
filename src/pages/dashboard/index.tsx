@@ -1,10 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  calculatePoints,
-  getPointsByAddress,
-  getTotalStakedBalance,
-} from "@/services/point";
+
 import { getAddress, getBalance } from "@/lib/web3";
 import { useWallet } from "@meshsdk/react";
 import { useEffect, useState } from "react";
@@ -27,42 +23,42 @@ export default function Dashboard() {
     connected && fetchAddress();
   }, [connected]);
 
-  useEffect(() => {
-    if (!address) {
-      return;
-    }
-    const fetchTotalBalance = async () => {
-      const amount = await getTotalStakedBalance({
-        address: address.toString(),
-      });
-      amount?.points?.length
-        ? setTotalBalance(amount.points[0].amount)
-        : setTotalBalance(0);
-    };
-    fetchTotalBalance();
-  }, [address]);
+  // useEffect(() => {
+  //   if (!address) {
+  //     return;
+  //   }
+  //   const fetchTotalBalance = async () => {
+  //     const amount = await getTotalStakedBalance({
+  //       address: address.toString(),
+  //     });
+  //     amount?.points?.length
+  //       ? setTotalBalance(amount.points[0].amount)
+  //       : setTotalBalance(0);
+  //   };
+  //   fetchTotalBalance();
+  // }, [address]);
 
-  useEffect(() => {
-    const fetchPoints = async () => {
-      if (!address) {
-        return;
-      }
-      const pointData = await getPointsByAddress({
-        address: address?.toString() ?? "",
-      });
+  // useEffect(() => {
+  //   const fetchPoints = async () => {
+  //     if (!address) {
+  //       return;
+  //     }
+  //     const pointData = await getPointsByAddress({
+  //       address: address?.toString() ?? "",
+  //     });
 
-      if (
-        pointData.points &&
-        pointData.points.length > 0 &&
-        pointData.points[0].point
-      ) {
-        setPoints(pointData.points[0].point);
-      } else {
-        setPoints(0);
-      }
-    };
-    fetchPoints();
-  }, [address, twoMin]);
+  //     if (
+  //       pointData.points &&
+  //       pointData.points.length > 0 &&
+  //       pointData.points[0].point
+  //     ) {
+  //       setPoints(pointData.points[0].point);
+  //     } else {
+  //       setPoints(0);
+  //     }
+  //   };
+  //   fetchPoints();
+  // }, [address, twoMin]);
 
   useEffect(() => {
     const fetchBalance = async () => {
@@ -79,9 +75,9 @@ export default function Dashboard() {
     clearInterval(intervalId);
   }
 
-  useEffect(() => {
-    calculatePoints({ address: address?.toString() ?? "" });
-  }, [address, twoMin]);
+  // useEffect(() => {
+  //   calculatePoints({ address: address?.toString() ?? "" });
+  // }, [address, twoMin]);
 
   function formatNumber(number: string) {
     return new Intl.NumberFormat("en-US").format(Number(number));

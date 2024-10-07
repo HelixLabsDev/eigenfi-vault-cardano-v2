@@ -53,6 +53,8 @@ export async function mainUnlock(wallet: BrowserWallet, depoHash: string) {
 
   const utxo = await getUtxoByTxHash(depoHash);
 
+  console.log("utxos", await wallet.getUtxos());
+
   if (utxo === undefined) throw new Error("UTxO not found");
 
   const unsignedTx = await unlockAsset(utxo, message, wallet);

@@ -1,6 +1,5 @@
 import { mainLock } from "@/components/aiken/lock-assets";
-import { createPoint } from "@/services/point";
-import { checkSignature, generateNonce } from "@meshsdk/core";
+// import { checkSignature, generateNonce } from "@meshsdk/core";
 import { Dispatch, SetStateAction } from "react";
 
 export async function depositERC20({
