@@ -3,8 +3,8 @@ import MobileNav from "./mobile-nav";
 import Link from "next/link";
 import SideBarContent from "./sidebar-content";
 
-import ConnectionHandler from "../connect-button";
 import SelectDomain from "./select-domain";
+import ConnectionHandler from "../connect-button";
 
 export default function Header() {
   // const [address, setAddress] = useState("");

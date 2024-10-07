@@ -29,7 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
 import { calculatePoints, getPointsByAddress } from "@/services/point";
 import { useNetwork, useWallet } from "@meshsdk/react";
-import { getAddress, getBalance } from "@/services/web3";
+import { getAddress, getBalance } from "@/lib/web3";
 import { getTotalStakedBalance } from "@/services/point";
 import ConfirmDialog from "./confirm-dialog";
 import ConnectionHandler from "../connect-button";
@@ -64,8 +64,8 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
       setAddress(address);
     };
 
-    fetchAddress();
-  }, []);
+    connected && fetchAddress();
+  }, [connected]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -79,16 +79,16 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
       if (points.length === 0) return;
       setHistory(JSON.parse(points[0]?.history)[0]);
     };
-    fetch();
-  }, [address]);
+    connected && fetch();
+  }, [address, connected]);
 
   useEffect(() => {
     const fetchBalance = async () => {
       const balance: any = await getBalance();
       setTotalBalance(balance[0].quantity);
     };
-    fetchBalance();
-  }, [address]);
+    connected && fetchBalance();
+  }, [address, connected]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -104,8 +104,8 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
         setBalance((totalBalance / 1e6).toString());
       }
     };
-    fetch();
-  }, [address, amount, totalBalance, withdraw]);
+    connected && fetch();
+  }, [address, amount, totalBalance, withdraw, connected]);
 
   const max = async () => {
     setAmount(Number(balance));
@@ -356,7 +356,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
 
       <ConnectionHandler isOpenProp={open} setIsOpenProp={setOpen} />
 
-      <ConfirmDialog
+      {/* <ConfirmDialog
         open={show}
         history={history}
         setOpen={setOpenShow}
@@ -366,7 +366,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
         failed={failed}
         hash={hash}
         withdraw={withdraw}
-      />
+      /> */}
     </Card>
   );
 }

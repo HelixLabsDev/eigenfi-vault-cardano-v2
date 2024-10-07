@@ -5,7 +5,7 @@ import {
   getPointsByAddress,
   getTotalStakedBalance,
 } from "@/services/point";
-import { getAddress, getBalance, getBalances } from "@/services/web3";
+import { getAddress, getBalance } from "@/lib/web3";
 import { useWallet } from "@meshsdk/react";
 import { useEffect, useState } from "react";
 
@@ -24,8 +24,8 @@ export default function Dashboard() {
       setAddress(address);
     };
 
-    fetchAddress();
-  }, []);
+    connected && fetchAddress();
+  }, [connected]);
 
   useEffect(() => {
     if (!address) {

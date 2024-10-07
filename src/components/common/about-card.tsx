@@ -5,10 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
 import { totalFundBalance } from "@/services/point";
-import { getAddress } from "@/services/web3";
+import { getAddress } from "@/lib/web3";
+import { useWallet } from "@meshsdk/react";
 
 export default function CardWithAbout({ refetch }: { refetch: boolean }) {
   const [address, setAddress] = useState("");
+  const { connected } = useWallet();
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -16,8 +18,8 @@ export default function CardWithAbout({ refetch }: { refetch: boolean }) {
       setAddress(address);
     };
 
-    fetchAddress();
-  }, []);
+    connected && fetchAddress();
+  }, [connected]);
   const [balance, setBalance] = useState<string>("");
 
   useEffect(() => {

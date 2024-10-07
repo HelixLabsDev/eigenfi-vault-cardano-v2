@@ -1,4 +1,4 @@
-import { unlockTx } from "@/offchain/unlockTx";
+import { mainUnlock } from "@/components/aiken/unlock-assets";
 import { withdrawPoint } from "@/services/point";
 import { Dispatch, SetStateAction, TransitionStartFunction } from "react";
 
@@ -33,10 +33,10 @@ export const withdrawERC20 = async ({
     setSuccess(false);
     setFailed("");
     setHash("");
-    const txHash = await unlockTx(
+    const txHash = await mainUnlock(
       wallet,
       // "mainnetITSkqaZbvB2CosVg0f2DnwPrXn444X5f"
-      "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35"
+      "dcc28f5da6761b19f22582edd7dce693990d2e5cedf6136a5a3b3d4744026f45"
     );
 
     // if (res.status === 201 || res.status === 200 || res.status === 204) {

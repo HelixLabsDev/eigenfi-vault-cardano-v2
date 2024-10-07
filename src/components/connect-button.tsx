@@ -1,4 +1,6 @@
-import { useWallet } from "@meshsdk/react";
+"use client";
+
+import { useWallet, useWalletList } from "@meshsdk/react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -6,185 +8,183 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { ChevronRight, LogOut } from "lucide-react";
-import { getAddress, getInstalled } from "@/services/web3";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MdWallet } from "react-icons/md";
+import Image from "next/image";
+import { getAddress, getAvailableWallets } from "@/lib/web3";
+
+interface Wallet {
+  id: string;
+  name: string;
+  icon: string;
+}
 
 export default function ConnectionHandler({
   isOpenProp,
   setIsOpenProp,
 }: {
   isOpenProp?: boolean;
-  setIsOpenProp?: any;
+  setIsOpenProp?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { connect, disconnect, connected, wallet } = useWallet();
+  const { disconnect, connected, connect, wallet } = useWallet();
   const [address, setAddress] = useState("");
-  const [installedWallet, setInstalledWallet] = useState<any>([]);
+  const [installedWallets, setInstalledWallets] = useState<Wallet[]>([]);
+
+  const wallets = useWalletList();
+  console.log("wallets", wallets);
 
   useEffect(() => {
-    const fetchAddress = async () => {
-      const address = await getAddress();
-      const iw = await getInstalled();
-      setInstalledWallet(iw);
-      setAddress(address);
+    const fetchWallets = async () => {
+      try {
+        const address = await wallet.getChangeAddress();
+        const iw = await getAvailableWallets();
+        setInstalledWallets(iw);
+        setAddress(address);
+      } catch (error) {
+        console.error("Error fetching wallet data:", error);
+      }
     };
 
-    fetchAddress();
-  }, []);
+    fetchWallets();
+  }, [wallet]);
 
   useEffect(() => {
     const walletprovider = localStorage.getItem("walletprovider");
     if (walletprovider) connect(walletprovider);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [connect]);
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     const check = localStorage.getItem("checkSignature");
-  //     if (connected && check !== "true") {
-  //       const nonce = generateNonce("Sign to login in to Mesh: ");
-  //       console.log("nonce: ", nonce);
-  //       const userAddress = (await wallet.getRewardAddresses())[0];
-  //       const signature = await wallet.signData(nonce, userAddress);
-  //       const result = checkSignature(nonce, signature);
-
-  //       if (result) {
-  //         localStorage.setItem("checkSignature", result.toString());
-  //         toast.success("Signature verified");
-  //       } else {
-  //         toast.error("Signature not verified");
-  //       }
-  //     }
-  //   };
-
-  //   fetch();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [connected]);
+  console.log("installedWallets", installedWallets);
 
   useEffect(() => {
-    isOpenProp && setIsOpen(true);
-    setIsOpenProp && setIsOpenProp(false);
-  }, [isOpenProp, isOpen, setIsOpenProp]);
+    if (isOpenProp) setIsOpen(true);
+    if (setIsOpenProp) setIsOpenProp(false);
+  }, [isOpenProp, setIsOpenProp]);
 
-  const installedWalletMemo = useMemo(() => installedWallet, [installedWallet]);
+  const connectedCard = () => {
+    return installedWallets.map(
+      (wallet, _id) =>
+        localStorage.getItem("walletprovider") === wallet.id && (
+          <div
+            key={_id}
+            className="flex gap-2 w-full items-center border rounded-md p-4"
+          >
+            <Avatar>
+              <AvatarImage src={wallet.icon} alt={wallet.name} />
+              <AvatarFallback>
+                {address?.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <div className="w-full flex flex-col gap-1 justify-center text-sm">
+              <p className="border w-20 text-center text-sm border-primary rounded-sm text-textPrimary">
+                {wallet.name}
+              </p>
+              <p className="font-bold">
+                WELCOME !,
+                <span className="ps-2">
+                  {address?.slice(0, 4) + "..." + address?.slice(-4)}
+                </span>
+              </p>
+            </div>
+            <div
+              className="p-2 hover:bg-foreground/5 rounded-full"
+              onClick={() => disconnect()}
+            >
+              <LogOut className="w-5 h-5 cursor-pointer" />
+            </div>
+          </div>
+        )
+    );
+  };
+
+  const installedCard = () => {
+    return (
+      <div className="flex flex-col gap-3 w-full pt-6">
+        {installedWallets?.map((wallet: Wallet, _id: number) => (
+          <div
+            key={_id}
+            className="flex items-center gap-2 hover:bg-foreground/5 rounded-sm py-2 w-full justify-between cursor-pointer"
+            onClick={() => {
+              connect(wallet.id);
+              localStorage.setItem("walletprovider", wallet.id);
+            }}
+          >
+            <div className="flex items-center gap-3">
+              <Image
+                src={wallet.icon}
+                alt={wallet.name}
+                width={1500}
+                height={1500}
+                className="w-8 h-8"
+              />
+              <p className="text-lg">{wallet.name}</p>
+            </div>
+            <ChevronRight className="w-4 h-4" />
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  const notInstalledCard = () => {
+    return (
+      <div className="flex w-full pt-6 gap-2">
+        <p> Install a wallet to get started:</p>
+        <div className="flex gap-2">
+          <a
+            className="text-textPrimary"
+            href="https://chrome.google.com/webstore/detail/nami/lpfcbjknijpeeillifnkikgncikgfhdo"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Nami,
+          </a>
+          <a
+            className="text-textPrimary"
+            href="https://metamask.io/download.html"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Metamask
+          </a>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <>
-      <Sheet open={isOpen} onOpenChange={setIsOpen}>
-        {isOpenProp === undefined && (
-          <Button
-            variant={"gradient"}
-            className="flex items-center gap-1.5"
-            onClick={() => setIsOpen(true)}
-          >
-            <MdWallet className="w-5 h-5" />
-            {address.length > 0
-              ? connected
-                ? address.slice(0, 4) + "..." + address.slice(-4)
-                : "Connect Wallet"
-              : "Connect Wallet"}
-          </Button>
-        )}
-
-        <SheetContent
-          aria-describedby={undefined}
-          side="bottom"
-          className="h-[200px]"
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      {isOpenProp === undefined && (
+        <Button
+          variant={"gradient"}
+          className="flex items-center gap-1.5"
+          onClick={() => setIsOpen(true)}
         >
-          <SheetHeader>
-            <SheetTitle>Wallet</SheetTitle>
-          </SheetHeader>
-          <div className="flex mt-6 md:max-w-[400px] w-full">
-            {connected ? (
-              <div className="flex gap-2 w-full items-center border rounded-md p-4">
-                <Avatar>
-                  <AvatarImage
-                    src={"https://github.com/shadcn.png"}
-                    alt="avatar"
-                  />
-                  <AvatarFallback>
-                    {address?.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="w-full flex flex-col gap-1 justify-center text-sm">
-                  <p className="border w-16 text-center text-sm border-primary rounded-sm text-textPrimary">
-                    NAMI
-                  </p>
-                  <p className="font-bold">
-                    WELCOME !,
-                    <span className="ps-2">
-                      {address?.slice(0, 4) + "..." + address?.slice(-4)}
-                    </span>
-                  </p>
-                </div>
-                <div
-                  className=" p-2 hover:bg-foreground/5 rounded-full"
-                  onClick={() => disconnect()}
-                >
-                  {/* <CircleArrowOutDownRight className="w-5 h-5 cursor-pointer" /> */}
-                  <LogOut className="w-5 h-5 cursor-pointer" />
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col gap-6 w-full">
-                <div
-                  className="flex items-center gap-2 hover:bg-foreground/5 rounded-sm py-2 w-full justify-between cursor-pointer"
-                  onClick={() => {
-                    connect("nami");
-                    localStorage.setItem("walletprovider", "nami");
-                  }}
-                >
-                  <div className="flex items-center gap-3">
-                    <Image
-                      src="https://app.minswap.org/wallets/nami.svg"
-                      alt="Nami"
-                      width={1500}
-                      height={1500}
-                      className="w-8 h-8"
-                    />
-                    <p className="text-lg">Nami</p>
-                  </div>
-                  <ChevronRight className="w-4 h-4" />
-                </div>
+          <MdWallet className="w-5 h-5" />
+          {address.length > 0
+            ? connected
+              ? address.slice(0, 4) + "..." + address.slice(-4)
+              : "Connect Wallet"
+            : "Connect Wallet"}
+        </Button>
+      )}
 
-                {installedWalletMemo.length === 0 && (
-                  <div className="flex gap-1">
-                    if not installed
-                    <a
-                      className="text-primary"
-                      href="https://chrome.google.com/webstore/detail/nami/lpfcbjknijpeeillifnkikgncikgfhdo"
-                      target="_blank"
-                    >
-                      Nami
-                    </a>
-                  </div>
-                )}
+      <SheetContent
+        aria-describedby={undefined}
+        side="bottom"
+        className="min-h-[200px]"
+      >
+        <SheetHeader>
+          <SheetTitle>Wallet</SheetTitle>
+        </SheetHeader>
 
-                {installedWallet.forEach((item: any) => {
-                  if (item.name !== "Nami") {
-                    return (
-                      <div className="flex gap-1">
-                        if not installed
-                        <a
-                          className="text-primary"
-                          href="https://chrome.google.com/webstore/detail/nami/lpfcbjknijpeeillifnkikgncikgfhdo"
-                          target="_blank"
-                        >
-                          Nami
-                        </a>
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            )}
-          </div>
-        </SheetContent>
-      </Sheet>
-    </>
+        <div className="flex flex-col mt-6 md:max-w-[400px] w-full">
+          {connected ? connectedCard() : installedCard()}
+          {notInstalledCard()}
+        </div>
+      </SheetContent>
+    </Sheet>
   );
 }

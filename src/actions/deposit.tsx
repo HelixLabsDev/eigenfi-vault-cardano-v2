@@ -1,4 +1,4 @@
-import { lockTx } from "@/offchain/lockTx";
+import { mainLock } from "@/components/aiken/lock-assets";
 import { createPoint } from "@/services/point";
 import { checkSignature, generateNonce } from "@meshsdk/core";
 import { Dispatch, SetStateAction } from "react";
@@ -53,11 +53,7 @@ export async function depositERC20({
     setFailed("");
     setHash("");
     startTransition(true);
-    const txHash = await lockTx(
-      wallet,
-      "preprodIZeSqbpsa1CttYKvzSvZTDiEM0Ar4h35",
-      amount
-    );
+    const txHash = await mainLock(wallet, (amount * 1e6).toString());
 
     // const res = await createPoint({
     //   address: address.toString(),
