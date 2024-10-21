@@ -64,7 +64,7 @@ export default function ConnectionHandler({
   }, [isOpenProp, setIsOpenProp]);
 
   const connectedCard = () => {
-    return installedWallets.map(
+    return wallets.map(
       (wallet, _id) =>
         localStorage.getItem("walletprovider") === wallet.id && (
           <div
@@ -102,7 +102,7 @@ export default function ConnectionHandler({
   const installedCard = () => {
     return (
       <div className="flex flex-col gap-3 w-full pt-6">
-        {installedWallets?.map((wallet: Wallet, _id: number) => (
+        {wallets?.map((wallet: Wallet, _id: number) => (
           <div
             key={_id}
             className="flex items-center gap-2 hover:bg-foreground/5 rounded-sm py-2 w-full justify-between cursor-pointer"
@@ -143,11 +143,11 @@ export default function ConnectionHandler({
           </a>
           <a
             className="text-textPrimary"
-            href="https://metamask.io/download.html"
+            href="https://nu.fi/"
             target="_blank"
             rel="noopener noreferrer"
           >
-            Metamask
+            Nufi
           </a>
         </div>
       </div>
