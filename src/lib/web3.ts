@@ -8,7 +8,7 @@ export const getAddress = async () => {
   if (iw.length === 0) {
     return "No wallet installed";
   }
-  const wallett = await BrowserWallet?.enable("nufiSnap");
+  const wallett = await BrowserWallet?.enable("nami");
   const changeAddress = await wallett.getChangeAddress();
 
   return changeAddress;
@@ -30,7 +30,7 @@ export const getBalance = async () => {
   if (iw.length === 0) {
     return "No wallet installed";
   }
-  const wallett = await BrowserWallet?.enable("nufiSnap");
+  const wallett = await BrowserWallet?.enable("nami");
 
   console.log("wallett", wallett);
   const balance = await wallett.getBalance();

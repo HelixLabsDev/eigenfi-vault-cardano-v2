@@ -48,7 +48,7 @@ export async function unlockAsset(
   return txBuilder.txHex;
 }
 
-export async function mainUnlock(wallet: BrowserWallet, depoHash: string) {
+export async function mainUnlock(wallet: BrowserWallet) {
   const message = "EigenFi - Vault";
 
   const hashLast = (await wallet.getUtxos())[
@@ -63,7 +63,11 @@ export async function mainUnlock(wallet: BrowserWallet, depoHash: string) {
 
   const unsignedTx = await unlockAsset(utxo, message, wallet);
 
+  console.log("unsignedTx unsignedTx ->", unsignedTx);
+
   const signedTx = await wallet.signTx(unsignedTx);
+
+  console.log("signedTx ==>", signedTx);
   const txHash = await wallet.submitTx(signedTx);
   console.log("txHash", txHash);
 
