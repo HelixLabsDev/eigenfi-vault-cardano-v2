@@ -71,6 +71,13 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        chart: {
+          "1": "hsl(var(--chart-1))",
+          "2": "hsl(var(--chart-2))",
+          "3": "hsl(var(--chart-3))",
+          "4": "hsl(var(--chart-4))",
+          "5": "hsl(var(--chart-5))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -79,12 +86,20 @@ const config = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: "0" },
-          to: { height: "var(--radix-accordion-content-height)" },
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
         },
         "accordion-up": {
-          from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
         },
         "fade-in": {
           "0%": {
@@ -102,7 +117,6 @@ const config = {
             transform: "translateX(100%)",
             opacity: "0%",
           },
-
           "30%": {
             transform: "translateX(0%)",
             opacity: "100%",
@@ -116,7 +130,6 @@ const config = {
             transform: "translateX(-100%)",
             opacity: "0%",
           },
-
           "30%": {
             transform: "translateX(0%)",
             opacity: "100%",
@@ -138,19 +151,30 @@ const config = {
           "80%": {
             opacity: "100%",
           },
-
           "100%": {
             "line-height": "100%",
             opacity: "100%",
           },
         },
         in: {
-          "0%": { transform: "translateY(18px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
+          "0%": {
+            transform: "translateY(18px)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
         },
         "in-reverse": {
-          "0%": { transform: "translateY(18px)", opacity: "0" },
-          "100%": { transform: "translateY(0)", opacity: "1" },
+          "0%": {
+            transform: "translateY(18px)",
+            opacity: "0",
+          },
+          "100%": {
+            transform: "translateY(0)",
+            opacity: "1",
+          },
         },
       },
       animation: {

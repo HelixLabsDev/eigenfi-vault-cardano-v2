@@ -1,7 +1,7 @@
-import "@/styles/globals.css";
+import "./globals.css";
 import type { AppProps } from "next/app";
 import { MeshProvider } from "@meshsdk/react";
-import ThemeProvider from "@/components/layout/provider";
+import ThemeProvider from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
 import { fontCalSans, fontMichroma } from "@/assets/fonts";
 import { siteConfig } from "@/config/site";
@@ -21,11 +21,9 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="icon" href="/icon.png" />
       </Head>
       <div className={cn(fontCalSans.className, fontMichroma.variable)}>
-        <MeshProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </MeshProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <Component {...pageProps} />
+        </ThemeProvider>
       </div>
     </div>
   );

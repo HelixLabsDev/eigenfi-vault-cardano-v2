@@ -1,33 +1,24 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
-import { getAddress } from "@/lib/web3";
-import { useWallet } from "@meshsdk/react";
+import { useStore } from "@/lib/store";
 
-export default function CardWithAbout({ refetch }: { refetch: boolean }) {
-  const [address, setAddress] = useState("");
-  const { connected } = useWallet();
+export default function CardWithAbout() {
+  const { user } = useStore();
+  const [withdrawBalance, setWithdrawBalance] = useState<number>(0);
 
   useEffect(() => {
-    const fetchAddress = async () => {
-      const address = await getAddress();
-      setAddress(address);
-    };
+    if (user?.utxo) {
+      const arr: Array<number> = [];
+      user?.utxo?.map((utx: { amount: number; hash: string }) => {
+        arr.push(Number(utx?.amount));
+      });
 
-    connected && fetchAddress();
-  }, [connected]);
-  const [balance, setBalance] = useState<string>("");
-
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     const res = await totalFundBalance();
-  //     setBalance(res.totalBalance.toString());
-  //   };
-  //   fetch();
-  // }, [address, refetch]);
+      let sum = arr.reduce((a, b) => a + b, 0);
+      setWithdrawBalance(sum);
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col gap-4 max-w-[500px] w-full">
@@ -37,8 +28,10 @@ export default function CardWithAbout({ refetch }: { refetch: boolean }) {
             Total Staked Balance:{" "}
             {
               <div className="flex gap-0.5 text-[13px]">
-                {balance.length > 0 ? (
-                  formatNumber(Number(balance).toFixed(2))
+                {withdrawBalance ? (
+                  formatNumber(Number(withdrawBalance).toFixed(2))
+                ) : withdrawBalance === 0 ? (
+                  "0.00"
                 ) : (
                   <Skeleton className="w-16 h-5 rounded-md" />
                 )}

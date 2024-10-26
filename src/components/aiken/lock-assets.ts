@@ -1,5 +1,3 @@
-"use client";
-
 import {
   Asset,
   BrowserWallet,
@@ -37,10 +35,8 @@ export async function mainLock(wallet: BrowserWallet, amount: string) {
   ];
 
   const unsignedTx = await lockAsset(assets, wallet);
-
   const signedTx = await wallet.signTx(unsignedTx);
   const txHash = await wallet.submitTx(signedTx);
-  console.log("txHash", txHash);
 
   return txHash;
 }

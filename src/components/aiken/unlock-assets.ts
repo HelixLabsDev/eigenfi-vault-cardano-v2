@@ -1,4 +1,3 @@
-"use client";
 import {
   deserializeAddress,
   mConStr0,
@@ -48,28 +47,16 @@ export async function unlockAsset(
   return txBuilder.txHex;
 }
 
-export async function mainUnlock(wallet: BrowserWallet) {
+export async function mainUnlock(wallet: BrowserWallet, hash: string) {
   const message = "EigenFi - Vault";
 
-  const hashLast = (await wallet.getUtxos())[
-    (await wallet.getUtxos()).length - 1
-  ].input.txHash;
-
-  console.log("hashLast ->", hashLast);
-
-  const utxo = await getUtxoByTxHash(hashLast);
+  const utxo = await getUtxoByTxHash(hash);
 
   if (utxo === undefined) throw new Error("UTxO not found");
 
   const unsignedTx = await unlockAsset(utxo, message, wallet);
-
-  console.log("unsignedTx unsignedTx ->", unsignedTx);
-
-  const signedTx = await wallet.signTx(unsignedTx);
-
-  console.log("signedTx ==>", signedTx);
+  const signedTx = await wallet.signTx(unsignedTx, true);
   const txHash = await wallet.submitTx(signedTx);
-  console.log("txHash", txHash);
 
   return txHash;
 }

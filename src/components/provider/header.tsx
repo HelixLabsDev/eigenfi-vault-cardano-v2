@@ -4,20 +4,9 @@ import Link from "next/link";
 import SideBarContent from "./sidebar-content";
 
 import SelectDomain from "./select-domain";
-import ConnectionHandler from "../connect-button";
+import ConnectionHandler from "../custom/connect-button";
 
 export default function Header() {
-  // const [address, setAddress] = useState("");
-
-  // useEffect(() => {
-  //   const fetchAddress = async () => {
-  //     const address = await getAddress();
-  //     setAddress(address);
-  //   };
-
-  //   fetchAddress();
-  // }, []);
-
   return (
     <div className="justify-between w-full flex px-4 md:px-8 py-6 items-center">
       <div className="flex justify-between gap-16 items-center md:w-auto w-full">

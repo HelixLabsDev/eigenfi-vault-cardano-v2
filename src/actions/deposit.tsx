@@ -5,7 +5,6 @@ import { Dispatch, SetStateAction } from "react";
 export async function depositERC20({
   amount,
   wallet,
-  totalBalance,
   network,
   address,
   startTransition,
@@ -19,7 +18,6 @@ export async function depositERC20({
 }: {
   amount: number;
   wallet: any;
-  totalBalance: number;
   network: number;
   address: string;
   startTransition: Dispatch<SetStateAction<boolean>>;
@@ -47,30 +45,36 @@ export async function depositERC20({
   // if (!result) throw new Error("invalid signature");
 
   try {
-    setOpenShow(true);
+    if (localStorage.getItem("walletprovider") === "nami") setOpenShow(true);
     setSuccess(false);
     setFailed("");
     setHash("");
     startTransition(true);
     const txHash = await mainLock(wallet, (amount * 1e6).toString());
 
-    // const res = await createPoint({
-    //   address: address.toString(),
-    //   amount: Number(amount || 0),
-    //   total_balance: Number(totalBalance || 0),
-    // });
-
-    // if ([200, 201, 204].includes(res.status)) {
     if (txHash) {
-      toast.success(
-        `tx submitted: https://cardanoscan.io/transaction/${txHash}`
-      );
+      const response = await fetch("/api/deposit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          data: {
+            address: address.toString(),
+            amount: Number(amount || 0),
+            hash: txHash,
+          },
+        }),
+      });
 
-      // Re-fetch balance
-      reFetchBalance();
-      startTransition(false);
-      setSuccess(true);
-      setHash(txHash);
+      if (response.ok) {
+        toast.success(
+          `tx submitted: https://cardanoscan.io/transaction/${txHash}`
+        );
+
+        reFetchBalance();
+        startTransition(false);
+        setSuccess(true);
+        setHash(txHash);
+      }
     }
   } catch (err: any) {
     handleError(err);

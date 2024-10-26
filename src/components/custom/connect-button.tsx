@@ -1,5 +1,3 @@
-"use client";
-
 import { useWallet, useWalletList } from "@meshsdk/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,11 +7,12 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useEffect, useState } from "react";
-import { ChevronRight, LogOut } from "lucide-react";
+import { ChevronRight, Loader2, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MdWallet } from "react-icons/md";
 import Image from "next/image";
-import { getAddress, getAvailableWallets } from "@/lib/web3";
+import ButtonCopy from "./copy-address";
+// import { getAddress, getAvailableWallets } from "@/lib/web3";
 
 interface Wallet {
   id: string;
@@ -29,19 +28,17 @@ export default function ConnectionHandler({
   setIsOpenProp?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { disconnect, connected, connect, wallet } = useWallet();
+  const { disconnect, connected, connect, wallet, connecting } = useWallet();
   const [address, setAddress] = useState("");
-  const [installedWallets, setInstalledWallets] = useState<Wallet[]>([]);
 
   const wallets = useWalletList();
-  console.log("wallets", wallets);
 
   useEffect(() => {
     const fetchWallets = async () => {
       try {
         const address = await wallet.getChangeAddress();
-        const iw = await getAvailableWallets();
-        setInstalledWallets(iw);
+        // const iw = await getAvailableWallets();
+        // setInstalledWallets(iw);
         setAddress(address);
       } catch (error) {
         console.error("Error fetching wallet data:", error);
@@ -55,8 +52,6 @@ export default function ConnectionHandler({
     const walletprovider = localStorage.getItem("walletprovider");
     if (walletprovider) connect(walletprovider);
   }, [connect]);
-
-  console.log("installedWallets", installedWallets);
 
   useEffect(() => {
     if (isOpenProp) setIsOpen(true);
@@ -86,6 +81,7 @@ export default function ConnectionHandler({
                 <span className="ps-2">
                   {address?.slice(0, 4) + "..." + address?.slice(-4)}
                 </span>
+                <ButtonCopy address={address ?? ""} />
               </p>
             </div>
             <div
@@ -161,8 +157,13 @@ export default function ConnectionHandler({
           variant={"gradient"}
           className="flex items-center gap-1.5"
           onClick={() => setIsOpen(true)}
+          disabled={connecting}
         >
-          <MdWallet className="w-5 h-5" />
+          {connecting ? (
+            <Loader2 className="animate-spin w-5 h-5" />
+          ) : (
+            <MdWallet className="w-5 h-5" />
+          )}
           {address.length > 0
             ? connected
               ? address.slice(0, 4) + "..." + address.slice(-4)

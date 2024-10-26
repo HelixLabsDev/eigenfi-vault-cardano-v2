@@ -23,7 +23,6 @@ export default function ConfirmDialog({
   success,
   failed,
   withdraw,
-  history,
 }: {
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -33,7 +32,6 @@ export default function ConfirmDialog({
   success: boolean;
   failed: string;
   withdraw: boolean;
-  history?: number;
 }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -86,7 +84,7 @@ export default function ConfirmDialog({
                     Withdrawal request successfully sent
                   </p>
                   <p className="text-foreground/70 mt-1 font-thin">
-                    Withdrawal request for {history} tADA has been sent.
+                    Withdrawal request for {amount} tADA has been sent.
                   </p>
                   <div className="text-foreground/70 font-thin">
                     View your transaction on
@@ -109,10 +107,10 @@ export default function ConfirmDialog({
               ) : (
                 <div>
                   <p className="font-bold text-base text-foreground mt-3.5">
-                    You are requesting withdrawal for {history} tADA.
+                    You are requesting withdrawal for {amount} tADA.
                   </p>
                   <p className="text-foreground/70 mt-1 font-thin">
-                    Requesting withdrawal for {history} Testnet ADA.
+                    Requesting withdrawal for {amount} Testnet ADA.
                   </p>
                 </div>
               )

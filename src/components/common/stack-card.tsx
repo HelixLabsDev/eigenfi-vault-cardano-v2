@@ -29,11 +29,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { formatNumber } from "@/lib/utils";
 import { useNetwork, useWallet } from "@meshsdk/react";
 import { getAddress, getBalance } from "@/lib/web3";
-import ConfirmDialog from "./confirm-dialog";
-import ConnectionHandler from "../connect-button";
+import ConfirmDialog from "../custom/confirm-dialog";
+import ConnectionHandler from "../custom/connect-button";
+import AmountSelectDialog from "../custom/utxo-dialog";
+import { useStore } from "@/lib/store";
 
-export function CardWithStack({ setRefetch }: { setRefetch: any }) {
-  const { connected } = useWallet();
+export function CardWithStack() {
+  const { connected, connecting } = useWallet();
+  const { wallet } = useWallet();
+  const network = useNetwork();
+
   const [address, setAddress] = useState("");
 
   const [withdraw, setWithdraw] = useState<boolean>(false);
@@ -49,12 +54,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
   const [amount, setAmount] = useState<number | null>(null);
   const [isPending, startTransition] = useState(false);
 
-  const [history, setHistory] = useState<number>(0);
-
-  const { wallet } = useWallet();
-  const network = useNetwork();
-
-  const [totalBalance, setTotalBalance] = useState<number>(0);
+  const { setUser, user } = useStore();
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -65,46 +65,13 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
     connected && fetchAddress();
   }, [connected]);
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     const addressMy = await getAddress();
-  //     if (!addressMy) return;
-  //     const { points } = await getPointsByAddress({
-  //       address: addressMy.toString(),
-  //     });
-
-  //     if (!points) return;
-  //     if (points.length === 0) return;
-  //     setHistory(JSON.parse(points[0]?.history)[0]);
-  //   };
-  //   connected && fetch();
-  // }, [address, connected]);
-
-  useEffect(() => {
-    const fetchBalance = async () => {
-      const balance: any = await getBalance();
-      setTotalBalance(balance[0].quantity);
-    };
-    connected && fetchBalance();
-  }, [address, connected]);
-
   useEffect(() => {
     const fetch = async () => {
-      if (withdraw) {
-        // // EigenFiPool Staked Balance
-        // const amount = await getTotalStakedBalance({
-        //   address: address.toString(),
-        // });
-        // amount?.points?.length
-        //   ? setBalance(amount.points[0].amount)
-        //   : setBalance("0");
-        setBalance("0");
-      } else {
-        setBalance((totalBalance / 1e6).toString());
-      }
+      const balance: any = await getBalance();
+      setBalance((balance[0].quantity / 1e6).toString());
     };
     connected && fetch();
-  }, [address, amount, totalBalance, withdraw, connected]);
+  }, [address, amount, withdraw, connected]);
 
   const max = async () => {
     setAmount(Number(balance));
@@ -119,19 +86,16 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
   };
 
   const reFetchBalance = async () => {
-    setRefetch(true);
-    if (withdraw) {
-      // const amount = await getTotalStakedBalance({
-      //   address: address.toString(),
-      // });
-      // amount?.points?.length
-      //   ? setBalance(amount.points[0].amount)
-      //   : setBalance("0");
-      setBalance("0");
-    } else {
-      // MockToken Balance
-      const balance: any = await getBalance();
-      setBalance((balance[0]?.quantity / 1e6).toString());
+    const response = await fetch("/api/user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        address: address,
+      }),
+    });
+
+    if (response.ok) {
+      setUser((await response.json())?.data);
     }
   };
 
@@ -141,9 +105,21 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
     toast.error(errorMessage);
   };
 
-  // useEffect(() => {
-  //   calculatePoints({ address: address?.toString() || "" });
-  // }, [address]);
+  const [utxo, setUtxo] = useState<string>("");
+  const [withdrawBalance, setWithdrawBalance] = useState<number>(0);
+  const [openAmount, setOpenAmount] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user?.utxo) {
+      const arr: Array<number> = [];
+      user?.utxo?.map((utx: { amount: number; hash: string }) => {
+        arr.push(Number(utx?.amount));
+      });
+
+      let sum = arr.reduce((a, b) => a + b, 0);
+      setWithdrawBalance(sum);
+    }
+  }, [user]);
 
   return (
     <Card className="max-w-[500px] w-full rounded-3xl relative">
@@ -246,22 +222,17 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                     <div className="absolute top-2 left-3 text-sm text-muted-foreground/50">
                       Amount
                     </div>
-                    <Input
-                      id="pay"
-                      placeholder="Your deposit queue"
-                      type="number"
-                      value={amount?.toString() || ""}
-                      disabled
-                      onChange={(e) => {
-                        if (Number(e.target.value) <= 0) return setAmount(null);
-                        if (Number(e.target.value) >= Number(balance))
-                          return setAmount(Number(balance));
-                        e.target.value === ""
-                          ? setAmount(null)
-                          : setAmount(Number(e.target.value));
-                      }}
-                      className="bg-white/5 border-0 focus-visible:ring-offset-0 focus-visible:ring-[0.2px] h-[120px] py-[40px] text-[32px] pe-[80px]"
-                    />
+                    <div
+                      onClick={() => setOpenAmount(true)}
+                      className="flex w-full rounded-md border-input px-3 ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring cursor-pointer bg-white/5 border-0 focus-visible:ring-offset-0 focus-visible:ring-[0.2px] h-[120px] py-[40px] text-[32px] pe-[80px]"
+                    >
+                      {amount ? (
+                        amount
+                      ) : (
+                        <p className="opacity-50">Select amount</p>
+                      )}
+                    </div>
+
                     <Select defaultValue="tada">
                       <SelectTrigger
                         id="framework"
@@ -275,23 +246,60 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                     </Select>
 
                     <div className="absolute flex gap-1 bottom-3 left-3 text-sm text-muted-foreground">
-                      {balance ? (
-                        formatNumber(Number(balance).toFixed(2))
-                      ) : (
+                      {withdrawBalance ? (
+                        formatNumber(Number(withdrawBalance).toFixed(2))
+                      ) : withdrawBalance ? (
                         <Skeleton className="w-12 h-5 rounded-md" />
+                      ) : (
+                        "0.00"
                       )}
                       {" tADA"}
                     </div>
                     <div className="absolute bottom-3 right-3 text-sm text-muted-foreground flex gap-2">
-                      <Button size={"xs"} onClick={quarter} disabled>
-                        1/4
-                      </Button>
-                      <Button size={"xs"} onClick={half} disabled>
-                        1/2
-                      </Button>
-                      <Button size={"xs"} onClick={max} disabled>
-                        max
-                      </Button>
+                      {user?.utxo[0]?.amount && (
+                        <Button
+                          size={"xs"}
+                          onClick={() => {
+                            setAmount(user.utxo[0].amount);
+                            setHash(user.utxo[0].hash);
+                          }}
+                        >
+                          {user.utxo[0].amount}
+                        </Button>
+                      )}
+                      {user?.utxo[1]?.amount && (
+                        <Button
+                          size={"xs"}
+                          onClick={() => {
+                            setAmount(user.utxo[1].amount);
+                            setHash(user.utxo[1].hash);
+                          }}
+                        >
+                          {user.utxo[1].amount}
+                        </Button>
+                      )}
+                      {user?.utxo[2]?.amount && (
+                        <Button
+                          size={"xs"}
+                          onClick={() => {
+                            setAmount(user.utxo[2].amount);
+                            setHash(user.utxo[2].hash);
+                          }}
+                        >
+                          {user.utxo[2].amount}
+                        </Button>
+                      )}
+                      {user?.utxo[3]?.amount && (
+                        <Button
+                          size={"xs"}
+                          onClick={() => {
+                            setAmount(user.utxo[3].amount);
+                            setHash(user.utxo[3].hash);
+                          }}
+                        >
+                          {user.utxo[3].amount}
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -306,15 +314,16 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
           size={"lg"}
           disabled={
             (connected && !withdraw && (amount === null || amount === 0)) ||
-            isPending
+            isPending ||
+            connecting
           }
           className="w-full text-base"
           onClick={() =>
             connected
               ? withdraw
                 ? withdrawERC20({
+                    hash: utxo,
                     wallet,
-                    history,
                     address: address || "",
                     startTransition,
                     handleError,
@@ -328,7 +337,6 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
                 : depositERC20({
                     amount: Number(amount),
                     wallet,
-                    totalBalance,
                     network: Number(network),
                     address: address || "",
                     startTransition,
@@ -343,7 +351,9 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
               : setOpen(!open)
           }
         >
-          {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {(isPending || connecting) && (
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          )}
           {connected
             ? !amount
               ? withdraw
@@ -354,11 +364,19 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
         </Button>
       </CardFooter>
 
+      <AmountSelectDialog
+        setUtxo={setUtxo}
+        utxos={user?.utxo ?? []}
+        open={openAmount}
+        setOpen={setOpenAmount}
+        amount={amount ?? 0}
+        setAmount={setAmount}
+      />
+
       <ConnectionHandler isOpenProp={open} setIsOpenProp={setOpen} />
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         open={show}
-        history={history}
         setOpen={setOpenShow}
         isPending={isPending}
         amount={amount || 0}
@@ -366,7 +384,7 @@ export function CardWithStack({ setRefetch }: { setRefetch: any }) {
         failed={failed}
         hash={hash}
         withdraw={withdraw}
-      /> */}
+      />
     </Card>
   );
 }

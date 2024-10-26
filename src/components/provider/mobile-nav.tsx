@@ -1,6 +1,4 @@
-"use client";
-
-import SideBarContent from "@/components/layout/sidebar-content";
+import SideBarContent from "@/components/provider/sidebar-content";
 import {
   Sheet,
   SheetContent,

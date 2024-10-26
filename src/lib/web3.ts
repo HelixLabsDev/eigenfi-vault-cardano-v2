@@ -5,10 +5,12 @@ import { BrowserWallet } from "@meshsdk/core";
 export const getAddress = async () => {
   const iw = BrowserWallet?.getInstalledWallets();
 
+  const enabledWallet = localStorage.getItem("walletprovider") ?? "nami";
+
   if (iw.length === 0) {
     return "No wallet installed";
   }
-  const wallett = await BrowserWallet?.enable("nami");
+  const wallett = await BrowserWallet?.enable(enabledWallet);
   const changeAddress = await wallett.getChangeAddress();
 
   return changeAddress;
@@ -30,22 +32,10 @@ export const getBalance = async () => {
   if (iw.length === 0) {
     return "No wallet installed";
   }
-  const wallett = await BrowserWallet?.enable("nami");
+  const enabledWallet = localStorage.getItem("walletprovider") ?? "nami";
 
-  console.log("wallett", wallett);
+  const wallett = await BrowserWallet?.enable(enabledWallet);
   const balance = await wallett.getBalance();
-  console.log("balance", balance);
-
-  return balance;
-};
-
-export const getBalanceWallet = async ({
-  wallet,
-}: {
-  wallet: BrowserWallet;
-}) => {
-  const balance = await wallet.getBalance();
-  console.log("balance", balance);
 
   return balance;
 };

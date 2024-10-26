@@ -1,5 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useStore } from "@/lib/store";
 
 import { getAddress, getBalance } from "@/lib/web3";
 import { useWallet } from "@meshsdk/react";
@@ -7,12 +8,12 @@ import { useEffect, useState } from "react";
 
 export default function Dashboard() {
   const { connected } = useWallet();
-  const [balance, setBalance] = useState<number | null>(null);
-  const [points, setPoints] = useState<number>();
-  const [twoMin, setTwoMin] = useState<boolean>(true);
-  const [totalBalance, setTotalBalance] = useState<number | null>(null);
 
+  const { user, setUser } = useStore();
+
+  const [balance, setBalance] = useState<number | null>(null);
   const [address, setAddress] = useState("");
+  const [withdrawBalance, setWithdrawBalance] = useState<number>(0);
 
   useEffect(() => {
     const fetchAddress = async () => {
@@ -23,43 +24,6 @@ export default function Dashboard() {
     connected && fetchAddress();
   }, [connected]);
 
-  // useEffect(() => {
-  //   if (!address) {
-  //     return;
-  //   }
-  //   const fetchTotalBalance = async () => {
-  //     const amount = await getTotalStakedBalance({
-  //       address: address.toString(),
-  //     });
-  //     amount?.points?.length
-  //       ? setTotalBalance(amount.points[0].amount)
-  //       : setTotalBalance(0);
-  //   };
-  //   fetchTotalBalance();
-  // }, [address]);
-
-  // useEffect(() => {
-  //   const fetchPoints = async () => {
-  //     if (!address) {
-  //       return;
-  //     }
-  //     const pointData = await getPointsByAddress({
-  //       address: address?.toString() ?? "",
-  //     });
-
-  //     if (
-  //       pointData.points &&
-  //       pointData.points.length > 0 &&
-  //       pointData.points[0].point
-  //     ) {
-  //       setPoints(pointData.points[0].point);
-  //     } else {
-  //       setPoints(0);
-  //     }
-  //   };
-  //   fetchPoints();
-  // }, [address, twoMin]);
-
   useEffect(() => {
     const fetchBalance = async () => {
       const balance: any = await getBalance();
@@ -68,20 +32,48 @@ export default function Dashboard() {
     fetchBalance();
   }, [address]);
 
-  const intervalId = setInterval(min, 5000);
-
-  function min() {
-    setTwoMin(!twoMin);
-    clearInterval(intervalId);
-  }
-
-  // useEffect(() => {
-  //   calculatePoints({ address: address?.toString() ?? "" });
-  // }, [address, twoMin]);
-
   function formatNumber(number: string) {
     return new Intl.NumberFormat("en-US").format(Number(number));
   }
+
+  useEffect(() => {
+    const fetchAddress = async () => {
+      const address = await getAddress();
+      setAddress(address);
+    };
+
+    connected && fetchAddress();
+  }, [connected]);
+
+  useEffect(() => {
+    const fetchUSer = async () => {
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          address: address,
+        }),
+      });
+
+      if (response.ok) {
+        setUser((await response.json())?.data);
+      }
+    };
+    address && fetchUSer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [address]);
+
+  useEffect(() => {
+    if (user?.utxo) {
+      const arr: Array<number> = [];
+      user?.utxo?.map((utx: { amount: number; hash: string }) => {
+        arr.push(Number(utx?.amount));
+      });
+
+      let sum = arr.reduce((a, b) => a + b, 0);
+      setWithdrawBalance(sum);
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col gap-24">
@@ -118,19 +110,21 @@ export default function Dashboard() {
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-muted-foreground">Total Staked</p>
-            {totalBalance !== null && totalBalance >= 0 ? (
+            {withdrawBalance !== null ? (
               <p className="text-md">
-                {formatNumber(totalBalance.toFixed(2))} - tADA
+                {formatNumber(withdrawBalance.toFixed(2))} - tADA
               </p>
+            ) : withdrawBalance === 0 ? (
+              "0.00"
             ) : (
               <Skeleton className="h-6 w-32" />
             )}
           </div>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-muted-foreground">Total Points</p>
-            {points !== undefined && points >= 0 ? (
+            {user.points !== undefined ? (
               <p className="text-md">
-                {formatNumber(points.toFixed(2))} - points
+                {formatNumber(user.points.toFixed(2))} - points
               </p>
             ) : (
               <Skeleton className="h-6 w-32" />
