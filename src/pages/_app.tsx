@@ -1,6 +1,6 @@
 import "./globals.css";
 import type { AppProps } from "next/app";
-import { MeshProvider } from "@meshsdk/react";
+import { Analytics } from "@vercel/analytics/react";
 import ThemeProvider from "@/components/provider/theme-provider";
 import { cn } from "@/lib/utils";
 import { fontCalSans, fontMichroma } from "@/assets/fonts";
@@ -23,6 +23,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <div className={cn(fontCalSans.className, fontMichroma.variable)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <Component {...pageProps} />
+          <Analytics />
         </ThemeProvider>
       </div>
     </div>
