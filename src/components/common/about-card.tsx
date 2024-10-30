@@ -49,7 +49,7 @@ export default function CardWithAbout() {
         </CardHeader>
         <CardContent className="flex flex-col ">
           <div className="bg-white/10 font-medium text-foreground/80 py-2 px-3 rounded-md flex items-center justify-center">
-            Staking APR + Restaking APR + LRT points + Helix Points
+            Staking APR + Helix Points
           </div>
         </CardContent>
       </Card>

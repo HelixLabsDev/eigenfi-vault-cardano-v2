@@ -132,7 +132,7 @@ export function CardWithStack() {
         className="-top-12 hidden md:block absolute -right-14 w-28 h-auto -hue-rotate-30 grayscale-[0.3]"
       />
       <CardHeader>
-        <CardTitle className="text-sm">Stake</CardTitle>
+        <CardTitle className="text-sm">Helix Vault</CardTitle>
       </CardHeader>
       <CardContent className="flex justify-center items-center">
         <Tabs

@@ -2,7 +2,8 @@ import { FaXTwitter, FaGithub, FaDiscord, FaLinkedin } from "react-icons/fa6";
 
 export const navItem = [
   {
-    name: "Stake",
+    name: "Vault",
+    hoverText: "Deposit your assets here to earn Helix points.",
     href: "/",
     icon: (
       <svg

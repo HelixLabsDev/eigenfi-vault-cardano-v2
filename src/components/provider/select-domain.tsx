@@ -17,7 +17,7 @@ export default function SelectDomain() {
   return (
     <div>
       <Select
-        defaultValue="ADA"
+        defaultValue="Cardano"
         onValueChange={(value) =>
           domains.find((domain) => domain.name === value)?.link &&
           router.push(
@@ -48,25 +48,25 @@ export default function SelectDomain() {
 const domains = [
   {
     id: 1,
-    name: "ETH",
+    name: "Ethereum",
     link: "https://eth.eigenfi.io",
     icon: <FaEthereum />,
   },
   {
     id: 2,
-    name: "ADA",
+    name: "Cardano",
     link: "https://ada.eigenfi.io",
     icon: <SiCardano className="w-4 h-4" />,
   },
   {
     id: 3,
-    name: "BNB",
+    name: "BNB Chain",
     link: "https://bnb.eigenfi.io",
     icon: <SiBinance className="w-4 h-4" />,
   },
   {
     id: 4,
-    name: "BTC",
+    name: "BitLayer",
     link: "https://btc.eigenfi.io",
     icon: <FaBtc className="w-4 h-4" />,
   },
