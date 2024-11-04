@@ -187,7 +187,7 @@ export function CardWithStack() {
                         <SelectValue placeholder="Select" />
                       </SelectTrigger>
                       <SelectContent position="popper">
-                        <SelectItem value="eth">tADA</SelectItem>
+                        <SelectItem value="eth">$tADA</SelectItem>
                       </SelectContent>
                     </Select>
 

@@ -1,5 +1,3 @@
-// Dependencies: npm install @radix-ui/react-tooltip
-
 "use client";
 
 import { Button } from "@/components/ui/button";

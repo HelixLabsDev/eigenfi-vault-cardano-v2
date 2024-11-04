@@ -45,13 +45,3 @@ export default function Bridge() {
     </div>
   );
 }
-
-// export async function getServerSideProps() {
-//   const users = await getUsers();
-
-//   return {
-//     props: {
-//       users,
-//     },
-//   };
-// }

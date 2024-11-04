@@ -49,13 +49,13 @@ const domains = [
   {
     id: 1,
     name: "Ethereum",
-    link: "https://eth.eigenfi.io",
+    link: "https://ethereum.eigenfi.io",
     icon: <FaEthereum />,
   },
   {
     id: 2,
     name: "Cardano",
-    link: "https://ada.eigenfi.io",
+    link: "https://cardano.eigenfi.io",
     icon: <SiCardano className="w-4 h-4" />,
   },
   {
@@ -67,7 +67,7 @@ const domains = [
   {
     id: 4,
     name: "BitLayer",
-    link: "https://btc.eigenfi.io",
+    link: "https://bitlayer.eigenfi.io/",
     icon: <FaBtc className="w-4 h-4" />,
   },
 ];
