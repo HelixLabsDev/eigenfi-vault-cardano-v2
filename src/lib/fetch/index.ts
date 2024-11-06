@@ -12,6 +12,8 @@ if (!domain) {
   throw new Error("HELIX_VAULT is not set or invalid");
 }
 
+console.log("domain", domain);
+
 export async function helixFetch<T>({
   method = "POST",
   cache = "force-cache",
@@ -45,6 +47,8 @@ export async function helixFetch<T>({
     );
 
     const responseBody = await response.json();
+
+    console.log("response", response);
 
     if (!response.ok) {
       return {
