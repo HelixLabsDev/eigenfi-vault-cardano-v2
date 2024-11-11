@@ -27,7 +27,7 @@ export const navItem = [
   },
   { name: "Dashboard", href: "/dashboard" },
 
-  { name: "Bridge", href: "/bridge" },
+  // { name: "Bridge", href: "/bridge" },
 ];
 
 export const socials = [
