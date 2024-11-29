@@ -12,7 +12,7 @@ export default function ThemeProvider({
   return (
     <NextThemesProvider {...props}>
       <Web3Provider>
-        <div className="w-screen min-h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black ">
+        <div className="w-full min-h-screen overflow-hidden bg-gradient-to-tl from-black via-zinc-600/20 to-black ">
           <Header />
           <div className="md:container md:pb-16 pb-[72px] py-8 px-4 md:px-6">
             {children}
