@@ -14,6 +14,7 @@ export default function AmountSelectDialog({
   setAmount,
   amount: InitialAmount,
   setUtxo,
+  utxo,
 }: {
   utxos: { hash: string; amount: number }[];
   open: boolean;
@@ -21,7 +22,9 @@ export default function AmountSelectDialog({
   setAmount: React.Dispatch<React.SetStateAction<number | null>>;
   amount: number | null;
   setUtxo: React.Dispatch<React.SetStateAction<any>>;
+  utxo: string;
 }) {
+  console.log("utxo", utxo);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">
@@ -49,7 +52,7 @@ export default function AmountSelectDialog({
                     >
                       <div className="flex items-center justify-between w-full">
                         <span>{amount} tADA </span>
-                        {amount === InitialAmount && (
+                        {amount === InitialAmount && utxo === hash && (
                           <Check className="h-4 w-4" />
                         )}
                       </div>

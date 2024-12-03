@@ -121,6 +121,8 @@ export function CardWithStack() {
     }
   }, [user]);
 
+  console.log("user", user);
+
   return (
     <Card className="max-w-[500px] w-full rounded-3xl relative">
       <Image
@@ -366,6 +368,7 @@ export function CardWithStack() {
 
       <AmountSelectDialog
         setUtxo={setUtxo}
+        utxo={utxo}
         utxos={user?.utxo ?? []}
         open={openAmount}
         setOpen={setOpenAmount}
