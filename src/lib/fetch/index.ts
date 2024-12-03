@@ -48,8 +48,6 @@ export async function helixFetch<T>({
 
     const responseBody = await response.json();
 
-    console.log("response", response);
-
     if (!response.ok) {
       return {
         error: responseBody?.error || "Unknown error",

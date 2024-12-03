@@ -24,7 +24,6 @@ export default function AmountSelectDialog({
   setUtxo: React.Dispatch<React.SetStateAction<any>>;
   utxo: string;
 }) {
-  console.log("utxo", utxo);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-[425px]">

@@ -121,8 +121,6 @@ export function CardWithStack() {
     }
   }, [user]);
 
-  console.log("user", user);
-
   return (
     <Card className="max-w-[500px] w-full rounded-3xl relative">
       <Image
