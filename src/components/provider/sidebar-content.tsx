@@ -1,15 +1,16 @@
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
 import { Dispatch, SetStateAction } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { navItem } from "@/config/dashboard";
+import { cn } from "@/lib/utils";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "../ui/tooltip";
+} from "@/components/ui/tooltip";
 
 interface SideBarContentProps {
   setOpen?: Dispatch<SetStateAction<boolean>>;
@@ -22,6 +23,7 @@ const SideBarContent = ({ setOpen }: SideBarContentProps) => {
     <Link
       key={item.href}
       href={item.href}
+      target={item?.target}
       onClick={() => {
         setOpen && setOpen(false);
       }}

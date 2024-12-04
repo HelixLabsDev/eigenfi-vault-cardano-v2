@@ -27,7 +27,7 @@ export const navItem = [
   },
   { name: "Dashboard", href: "/dashboard" },
 
-  // { name: "Bridge", href: "/bridge" },
+  { name: "Faucet", href: "https://faucet.eigenfi.io", target: "_blank" },
 ];
 
 export const socials = [
