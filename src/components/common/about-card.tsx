@@ -29,7 +29,7 @@ export default function CardWithAbout() {
             {
               <div className="flex gap-0.5 text-[13px]">
                 {withdrawBalance ? (
-                  formatNumber(Number(withdrawBalance).toFixed(2))
+                  formatNumber(Number(withdrawBalance).toFixed(4))
                 ) : withdrawBalance === 0 ? (
                   "0.00"
                 ) : (
