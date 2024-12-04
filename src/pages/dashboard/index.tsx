@@ -75,6 +75,8 @@ export default function Dashboard() {
     }
   }, [user]);
 
+  console.log("user", user);
+
   return (
     <div className="flex flex-col gap-24">
       {connected ? (
@@ -124,7 +126,7 @@ export default function Dashboard() {
             <p className="text-sm text-muted-foreground">Total Points</p>
             {user.points !== undefined ? (
               <p className="text-md">
-                {formatNumber(user.points.toFixed(2))} - points
+                {formatNumber(Number(user.points).toFixed(2))} - points
               </p>
             ) : (
               <Skeleton className="h-6 w-32" />
